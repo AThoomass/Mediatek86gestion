@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using Mediatek86.controleur;
 using Mediatek86.metier;
-using Mediatek86.controleur;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Mediatek86.vue
 {
@@ -23,10 +23,15 @@ namespace Mediatek86.vue
         private readonly BindingSource bdgRayons = new BindingSource();
         private readonly BindingSource bdgRevuesListe = new BindingSource();
         private readonly BindingSource bdgExemplairesListe = new BindingSource();
+        private readonly BindingSource bdgCommandesLivreListe = new BindingSource();
+        private readonly BindingSource bdgCommandesDvdListe = new BindingSource();
+        private readonly BindingSource bdgAbonnementRevueListe = new BindingSource();
         private List<Livre> lesLivres = new List<Livre>();
         private List<Dvd> lesDvd = new List<Dvd>();
         private List<Revue> lesRevues = new List<Revue>();
         private List<Exemplaire> lesExemplaires = new List<Exemplaire>();
+        private List<CommandeDocument> lesCommandeDocument = new List<CommandeDocument>();
+        private List<Abonnement> lesAbonnements = new List<Abonnement>();
 
         #endregion
 
@@ -35,6 +40,14 @@ namespace Mediatek86.vue
         {
             InitializeComponent();
             this.controle = controle;
+        }
+
+        /// <summary>
+        /// Mets tous les booléens concernant saisies et modifications en 'false'
+        /// </summary>
+        private void CancelAllSaisies()
+        {
+
         }
 
 
@@ -1278,5 +1291,876 @@ namespace Mediatek86.vue
 
         #endregion
 
+        #region Commande de livre
+
+        //-----------------------------------------------------------
+        // ONGLET "COMMANDE DE LIVRES"
+        //-----------------------------------------------------------
+
+        /// <summary>
+        /// Ouverture de l'onglet : blocage en saisie des champs de saisie des infos de la commande
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabCommandeLivre_Enter(object sender, EventArgs e)
+        {
+            CancelAllSaisies();
+            lesLivres = controle.GetAllLivres();
+            txbCommandeLivreNumero.Text = "";
+            VideCommandeLivresInfos();
+        }
+
+        /// <summary>
+        /// Remplit le dategrid avec la liste reçue en paramètre
+        /// </summary>
+        private void RemplirCommandeLivresListe(List<CommandeDocument> lesCommandeDocument)
+        {
+
+            bdgCommandesLivreListe.DataSource = lesCommandeDocument;
+            dgvCommandeLivreListe.DataSource = bdgCommandesLivreListe;
+            dgvCommandeLivreListe.Columns["id"].Visible = false;
+            dgvCommandeLivreListe.Columns["idSuivi"].Visible = false;
+            dgvCommandeLivreListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvCommandeLivreListe.Columns["dateCommande"].DisplayIndex = 0;
+            dgvCommandeLivreListe.Columns["montant"].DisplayIndex = 1;
+            dgvCommandeLivreListe.Columns[4].HeaderCell.Value = "Date";
+            dgvCommandeLivreListe.Columns[0].HeaderCell.Value = "Exemplaires";
+            dgvCommandeLivreListe.Columns[2].HeaderCell.Value = "Etat";
+        }
+
+        /// <summary>
+        /// Recherche d'un numéro de livre et affiche ses informations
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCommandeLivreRechercher_Click(object sender, EventArgs e)
+        {
+            if (!txbCommandeLivreNumero.Text.Equals(""))
+            {
+                Livre livre = lesLivres.Find(x => x.Id.Equals(txbCommandeLivreNumero.Text.Trim()));
+                if (livre != null)
+                {
+                    AfficheCommandeLivreInfos(livre);
+                }
+                else
+                {
+                    MessageBox.Show("numéro introuvable");
+                    VideCommandeLivresInfos();
+                }
+            }
+            else
+            {
+                VideCommandeLivresInfos();
+            }
+        }
+
+        /// <summary>
+        /// Si le numéro de livre est modifié, la zone de commande est vidée et inactive
+        /// les informations du livre son aussi effacées
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txbCommandeLivreNumero_TextChanged(object sender, EventArgs e)
+        {
+            VideCommandeLivresInfos();
+        }
+
+        /// <summary>
+        /// Affichage des informations du livre sélectionné et les commandes
+        /// </summary>
+        /// <param name="livre"></param>
+        private void AfficheCommandeLivreInfos(Livre livre)
+        {
+            // informations sur le livre
+            txbCommandeLivreTitre.Text = livre.Titre;
+            txbCommandeLivreAuteur.Text = livre.Auteur;
+            txbCommandeLivreCollection.Text = livre.Collection;
+            txbCommandeLivreGenre.Text = livre.Genre;
+            txbCommandeLivrePublic.Text = livre.Public;
+            txbCommandeLivreRayon.Text = livre.Rayon;
+            txbCommandeLivreImage.Text = livre.Image;
+            txbCommandeLivreISBN.Text = livre.Isbn;
+            string image = livre.Image;
+            try
+            {
+                pcbCommandeLivreImage.Image = Image.FromFile(image);
+            }
+            catch
+            {
+                pcbCommandeLivreImage.Image = null;
+            }
+            // affiche la liste des commandes du livre
+            AfficheCommandeDocumentLivre();
+
+            // accès à la zone d'ajout d'une commande
+            // accesCommandeLivresGroupBox(true);
+        }
+
+        /// <summary>
+        /// Récupération de la liste de commandes d'un livre puis affichage dans la liste
+        /// </summary>
+        private void AfficheCommandeDocumentLivre()
+        {
+            string idDocument = txbCommandeLivreNumero.Text.Trim();
+            lesCommandeDocument = controle.GetCommandeDocument(idDocument);
+            RemplirCommandeLivresListe(lesCommandeDocument);
+        }
+
+        /// <summary>
+        /// Vide les zones d'affchage des informations du livre
+        /// </summary>
+        private void VideCommandeLivresInfos()
+        {
+            txbCommandeLivreTitre.Text = "";
+            txbCommandeLivreAuteur.Text = "";
+            txbCommandeLivreCollection.Text = "";
+            txbCommandeLivreGenre.Text = "";
+            txbCommandeLivrePublic.Text = "";
+            txbCommandeLivreRayon.Text = "";
+            txbCommandeLivreImage.Text = "";
+            txbCommandeLivreISBN.Text = "";
+            pcbCommandeLivreImage.Image = null;
+            lesCommandeDocument = new List<CommandeDocument>();
+            RemplirCommandeLivresListe(lesCommandeDocument);
+            // accesCommandeLivresGroupBox(false);
+        }
+
+        /// <summary>
+        /// Vide les zones d'affichage des informations de l'exemplaire
+        /// </summary>
+        /*        private void VideReceptionExemplaireInfos()
+                {
+                    txbReceptionExemplaireImage.Text = "";
+                    txbReceptionExemplaireNumero.Text = "";
+                    pcbReceptionExemplaireImage.Image = null;
+                    dtpReceptionExemplaireDate.Value = DateTime.Now;
+                }*/
+
+        /// <summary>
+        /// Permet ou interdit l'accès à la gestion de la réception d'un exemplaire
+        /// et vide les objets graphiques
+        /// </summary>
+        /// <param name="acces"></param>
+        /*        private void accesReceptionExemplaireGroupBox(bool acces)
+                {
+                    VideReceptionExemplaireInfos();
+                    grpReceptionExemplaire.Enabled = acces;
+                }*/
+
+        /// <summary>
+        /// Recherche image sur disque (pour l'exemplaire)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void btnReceptionExemplaireImage_Click(object sender, EventArgs e)
+                {
+                    string filePath = "";
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                    openFileDialog.InitialDirectory = "c:\\";
+                    openFileDialog.Filter = "Files|*.jpg;*.bmp;*.jpeg;*.png;*.gif";
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        filePath = openFileDialog.FileName;
+                    }
+                    txbReceptionExemplaireImage.Text = filePath;
+                    try
+                    {
+                        pcbReceptionExemplaireImage.Image = Image.FromFile(filePath);
+                    }
+                    catch
+                    {
+                        pcbReceptionExemplaireImage.Image = null;
+                    }
+                }*/
+
+        /// <summary>
+        /// Enregistrement du nouvel exemplaire
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void btnReceptionExemplaireValider_Click(object sender, EventArgs e)
+                {
+                    if (!txbReceptionExemplaireNumero.Text.Equals(""))
+                    {
+                        try
+                        {
+                            int numero = int.Parse(txbReceptionExemplaireNumero.Text);
+                            DateTime dateAchat = dtpReceptionExemplaireDate.Value;
+                            string photo = txbReceptionExemplaireImage.Text;
+                            string idEtat = ETATNEUF;
+                            string idDocument = txbReceptionRevueNumero.Text;
+                            Exemplaire exemplaire = new Exemplaire(numero, dateAchat, photo, idEtat, idDocument);
+                            if (controle.CreerExemplaire(exemplaire))
+                            {
+                                VideReceptionExemplaireInfos();
+                                afficheReceptionExemplairesRevue();
+                            }
+                            else
+                            {
+                                MessageBox.Show("numéro de publication déjà existant", "Erreur");
+                            }
+                        }
+                        catch
+                        {
+                            MessageBox.Show("le numéro de parution doit être numérique", "Information");
+                            txbReceptionExemplaireNumero.Text = "";
+                            txbReceptionExemplaireNumero.Focus();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("numéro de parution obligatoire", "Information");
+                    }
+                }*/
+
+        /// <summary>
+        /// Tri sur une colonne
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void dgvExemplairesListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+                {
+                    string titreColonne = dgvReceptionExemplairesListe.Columns[e.ColumnIndex].HeaderText;
+                    List<Exemplaire> sortedList = new List<Exemplaire>();
+                    switch (titreColonne)
+                    {
+                        case "Numero":
+                            sortedList = lesExemplaires.OrderBy(o => o.Numero).Reverse().ToList();
+                            break;
+                        case "DateAchat":
+                            sortedList = lesExemplaires.OrderBy(o => o.DateAchat).Reverse().ToList();
+                            break;
+                        case "Photo":
+                            sortedList = lesExemplaires.OrderBy(o => o.Photo).ToList();
+                            break;
+                    }
+                    RemplirReceptionExemplairesListe(sortedList);
+                }*/
+
+        private void dgvCommandeLivresListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            /*            string titreColonne = dgvCommandeLivresListe.Columns[e.ColumnIndex].HeaderText;
+                        List<Commande> sortedList = new List<Commande>();
+                        switch (titreColonne)
+                        {
+                            case "Numero":
+                                sortedList = lesExemplaires.OrderBy(o => o.Numero).Reverse().ToList();
+                                break;
+                            case "DateAchat":
+                                sortedList = lesExemplaires.OrderBy(o => o.DateAchat).Reverse().ToList();
+                                break;
+                            case "Photo":
+                                sortedList = lesExemplaires.OrderBy(o => o.Photo).ToList();
+                                break;
+                        }
+                        RemplirCommandeLivresListe(sortedList);*/
+        }
+
+        /// <summary>
+        /// Sélection d'une ligne complète et affichage de l'image sz l'exemplaire
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void dgvReceptionExemplairesListe_SelectionChanged(object sender, EventArgs e)
+                {
+                    if (dgvReceptionExemplairesListe.CurrentCell != null)
+                    {
+                        Exemplaire exemplaire = (Exemplaire)bdgExemplairesListe.List[bdgExemplairesListe.Position];
+                        string image = exemplaire.Photo;
+                        try
+                        {
+                            pcbReceptionExemplaireRevueImage.Image = Image.FromFile(image);
+                        }
+                        catch
+                        {
+                            pcbReceptionExemplaireRevueImage.Image = null;
+                        }
+                    }
+                    else
+                    {
+                        pcbReceptionExemplaireRevueImage.Image = null;
+                    }
+                }*/
+
+
+
+        #endregion
+
+        #region Commande de DVD
+        //-----------------------------------------------------------
+        // ONGLET "COMMANDE DE DVD"
+        //-----------------------------------------------------------
+
+        /// <summary>
+        /// Ouverture de l'onglet : blocage en saisie des champs de saisie des infos de la commande
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabCommandeDVD_Enter(object sender, EventArgs e)
+        {
+            CancelAllSaisies();
+            lesDvd = controle.GetAllDvd();
+            txbCommandeDvdNumero.Text = "";
+            VideCommandeDvdInfos();
+            // accesCommandeDvdGroupBox(false);
+        }
+
+        /// <summary>
+        /// Remplit le dategrid avec la liste reçue en paramètre
+        /// </summary>
+        private void RemplirCommandeDvdListe(List<CommandeDocument> lesCommandeDocument)
+        {
+
+            bdgCommandesDvdListe.DataSource = lesCommandeDocument;
+            dgvCommandeDvdListe.DataSource = bdgCommandesDvdListe;
+            dgvCommandeDvdListe.Columns["id"].Visible = false;
+            dgvCommandeDvdListe.Columns["idSuivi"].Visible = false;
+            dgvCommandeDvdListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvCommandeDvdListe.Columns["dateCommande"].DisplayIndex = 0;
+            dgvCommandeDvdListe.Columns["montant"].DisplayIndex = 1;
+            dgvCommandeDvdListe.Columns[4].HeaderCell.Value = "Date";
+            dgvCommandeDvdListe.Columns[0].HeaderCell.Value = "Exemplaires";
+            dgvCommandeDvdListe.Columns[2].HeaderCell.Value = "Etat";
+        }
+
+        /// <summary>
+        /// Recherche d'un numéro de DVD et affiche ses informations
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCommandeDvdRechercher_Click(object sender, EventArgs e)
+        {
+            if (!txbCommandeDvdNumero.Text.Equals(""))
+            {
+                Dvd dvd = lesDvd.Find(x => x.Id.Equals(txbCommandeDvdNumero.Text.Trim()));
+                if (dvd != null)
+                {
+                    AfficheCommandeDvdInfos(dvd);
+                }
+                else
+                {
+                    MessageBox.Show("numéro introuvable");
+                    VideCommandeDvdInfos();
+                }
+            }
+            else
+            {
+                VideCommandeDvdInfos();
+            }
+        }
+
+        /// <summary>
+        /// Si le numéro de DVD est modifié, la zone de commande est vidée et inactive
+        /// les informations du DVD son aussi effacées
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txbCommandeDvdNumero_TextChanged(object sender, EventArgs e)
+        {
+            // accesCommandeDvdGroupBox(false);
+            VideCommandeDvdInfos();
+        }
+
+        /// <summary>
+        /// Affichage des informations de la revue sélectionnée et les exemplaires
+        /// </summary>
+        /// <param name="revue"></param>
+        private void AfficheCommandeDvdInfos(Dvd dvd)
+        {
+            // informations sur le DVD
+            txbCommandeDvdTitre.Text = dvd.Titre;
+            txbCommandeDvdRealisateur.Text = dvd.Realisateur;
+            txbCommandeDvdSynopsis.Text = dvd.Synopsis;
+            txbCommandeDvdGenre.Text = dvd.Genre;
+            txbCommandeDvdPublic.Text = dvd.Public;
+            txbCommandeDvdRayon.Text = dvd.Rayon;
+            txbCommandeDvdImage.Text = dvd.Image;
+            pcbCommandeDvdImage.Image = null;
+            txbCommandeDvdDuree.Text = dvd.Duree.ToString();
+            string image = dvd.Image;
+            try
+            {
+                pcbCommandeDvdImage.Image = Image.FromFile(image);
+            }
+            catch
+            {
+                pcbCommandeDvdImage.Image = null;
+            }
+            // affiche la liste des commandes du DVD
+            AfficheCommandeDocumentDvd();
+
+            // accès à la zone d'ajout d'un exemplaire
+            // accesCommandeDvdGroupBox(true);
+        }
+
+        /// <summary>
+        /// Récupération de la liste de commandes d'un DVD puis affichage dans la liste
+        /// </summary>
+        private void AfficheCommandeDocumentDvd()
+        {
+            string idDocument = txbCommandeDvdNumero.Text.Trim();
+            lesCommandeDocument = controle.GetCommandeDocument(idDocument);
+            RemplirCommandeDvdListe(lesCommandeDocument);
+        }
+
+        /// <summary>
+        /// Vide les zones d'affchage des informations du DVD
+        /// </summary>
+        private void VideCommandeDvdInfos()
+        {
+            txbCommandeDvdTitre.Text = "";
+            txbCommandeDvdRealisateur.Text = "";
+            txbCommandeDvdSynopsis.Text = "";
+            txbCommandeDvdGenre.Text = "";
+            txbCommandeDvdPublic.Text = "";
+            txbCommandeDvdRayon.Text = "";
+            txbCommandeDvdImage.Text = "";
+            txbCommandeDvdDuree.Text = "";
+            pcbCommandeDvdImage.Image = null;
+            lesCommandeDocument = new List<CommandeDocument>();
+            RemplirCommandeDvdListe(lesCommandeDocument);
+            // accesCommandeDvdGroupBox(false);
+        }
+
+
+        /// <summary>
+        /// Vide les zones d'affichage des informations de l'exemplaire
+        /// </summary>
+        /*        private void VideReceptionExemplaireInfos()
+                {
+                    txbReceptionExemplaireImage.Text = "";
+                    txbReceptionExemplaireNumero.Text = "";
+                    pcbReceptionExemplaireImage.Image = null;
+                    dtpReceptionExemplaireDate.Value = DateTime.Now;
+                }*/
+
+        /// <summary>
+        /// Permet ou interdit l'accès à la gestion de la réception d'un exemplaire
+        /// et vide les objets graphiques
+        /// </summary>
+        /// <param name="acces"></param>
+        /*        private void accesReceptionExemplaireGroupBox(bool acces)
+                {
+                    VideReceptionExemplaireInfos();
+                    grpReceptionExemplaire.Enabled = acces;
+                }*/
+
+        /// <summary>
+        /// Recherche image sur disque (pour l'exemplaire)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void btnReceptionExemplaireImage_Click(object sender, EventArgs e)
+                {
+                    string filePath = "";
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                    openFileDialog.InitialDirectory = "c:\\";
+                    openFileDialog.Filter = "Files|*.jpg;*.bmp;*.jpeg;*.png;*.gif";
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        filePath = openFileDialog.FileName;
+                    }
+                    txbReceptionExemplaireImage.Text = filePath;
+                    try
+                    {
+                        pcbReceptionExemplaireImage.Image = Image.FromFile(filePath);
+                    }
+                    catch
+                    {
+                        pcbReceptionExemplaireImage.Image = null;
+                    }
+                }*/
+
+        /// <summary>
+        /// Enregistrement du nouvel exemplaire
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void btnReceptionExemplaireValider_Click(object sender, EventArgs e)
+                {
+                    if (!txbReceptionExemplaireNumero.Text.Equals(""))
+                    {
+                        try
+                        {
+                            int numero = int.Parse(txbReceptionExemplaireNumero.Text);
+                            DateTime dateAchat = dtpReceptionExemplaireDate.Value;
+                            string photo = txbReceptionExemplaireImage.Text;
+                            string idEtat = ETATNEUF;
+                            string idDocument = txbReceptionRevueNumero.Text;
+                            Exemplaire exemplaire = new Exemplaire(numero, dateAchat, photo, idEtat, idDocument);
+                            if (controle.CreerExemplaire(exemplaire))
+                            {
+                                VideReceptionExemplaireInfos();
+                                afficheReceptionExemplairesRevue();
+                            }
+                            else
+                            {
+                                MessageBox.Show("numéro de publication déjà existant", "Erreur");
+                            }
+                        }
+                        catch
+                        {
+                            MessageBox.Show("le numéro de parution doit être numérique", "Information");
+                            txbReceptionExemplaireNumero.Text = "";
+                            txbReceptionExemplaireNumero.Focus();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("numéro de parution obligatoire", "Information");
+                    }
+                }*/
+
+        /// <summary>
+        /// Tri sur une colonne
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void dgvExemplairesListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+                {
+                    string titreColonne = dgvReceptionExemplairesListe.Columns[e.ColumnIndex].HeaderText;
+                    List<Exemplaire> sortedList = new List<Exemplaire>();
+                    switch (titreColonne)
+                    {
+                        case "Numero":
+                            sortedList = lesExemplaires.OrderBy(o => o.Numero).Reverse().ToList();
+                            break;
+                        case "DateAchat":
+                            sortedList = lesExemplaires.OrderBy(o => o.DateAchat).Reverse().ToList();
+                            break;
+                        case "Photo":
+                            sortedList = lesExemplaires.OrderBy(o => o.Photo).ToList();
+                            break;
+                    }
+                    RemplirReceptionExemplairesListe(sortedList);
+                }*/
+
+        private void dgvCommandeDvdListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            /*            string titreColonne = dgvCommandeLivresListe.Columns[e.ColumnIndex].HeaderText;
+            List<Commande> sortedList = new List<Commande>();
+            switch (titreColonne)
+            {
+                case "Numero":
+                    sortedList = lesExemplaires.OrderBy(o => o.Numero).Reverse().ToList();
+                    break;
+                case "DateAchat":
+                    sortedList = lesExemplaires.OrderBy(o => o.DateAchat).Reverse().ToList();
+                    break;
+                case "Photo":
+                    sortedList = lesExemplaires.OrderBy(o => o.Photo).ToList();
+                    break;
+            }
+            RemplirCommandeLivresListe(sortedList);*/
+        }
+
+
+
+
+        /// <summary>
+        /// Sélection d'une ligne complète et affichage de l'image sz l'exemplaire
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void dgvReceptionExemplairesListe_SelectionChanged(object sender, EventArgs e)
+                {
+                    if (dgvReceptionExemplairesListe.CurrentCell != null)
+                    {
+                        Exemplaire exemplaire = (Exemplaire)bdgExemplairesListe.List[bdgExemplairesListe.Position];
+                        string image = exemplaire.Photo;
+                        try
+                        {
+                            pcbReceptionExemplaireRevueImage.Image = Image.FromFile(image);
+                        }
+                        catch
+                        {
+                            pcbReceptionExemplaireRevueImage.Image = null;
+                        }
+                    }
+                    else
+                    {
+                        pcbReceptionExemplaireRevueImage.Image = null;
+                    }
+                }*/
+
+
+
+        #endregion
+        
+        #region Abonnements Revue
+        
+        //-----------------------------------------------------------
+        // ONGLET "ABONNEMENTS REVUE"
+        //-----------------------------------------------------------
+
+        /// <summary>
+        /// Ouverture de l'onglet : blocage en saisie des champs de saisie des infos de l'abonnement
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabAbonnementRevue_Enter(object sender, EventArgs e)
+        {
+            CancelAllSaisies();
+            lesDvd = controle.GetAllDvd();
+            txbAbonnementRevueNumeroRevue.Text = "";
+            VideAbonnementRevueInfos();
+            // accesCommandeDvdGroupBox(false);
+        }
+
+        /// <summary>
+        /// Remplit le dategrid avec la liste reçue en paramètre
+        /// </summary>
+        private void RemplirAbonnementRevueListe(List<Abonnement> lesAbonnements)
+        {
+
+            bdgAbonnementRevueListe.DataSource = lesAbonnements;
+            dgvAbonnementRevueListe.DataSource = bdgAbonnementRevueListe;
+            dgvAbonnementRevueListe.Columns["id"].Visible = false;
+            dgvAbonnementRevueListe.Columns["idRevue"].Visible = false;
+            dgvAbonnementRevueListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvAbonnementRevueListe.Columns["dateCommande"].DisplayIndex = 0;
+            dgvAbonnementRevueListe.Columns["montant"].DisplayIndex = 1;
+            dgvAbonnementRevueListe.Columns[3].HeaderCell.Value = "Date commande";
+            dgvAbonnementRevueListe.Columns[0].HeaderCell.Value = "Date fin abonnement";
+        }
+
+        /// <summary>
+        /// Recherche d'un numéro de revue et affiche ses informations
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnAbonnementRevueRechercher_Click(object sender, EventArgs e)
+        {
+            if (!txbAbonnementRevueNumeroRevue.Text.Equals(""))
+            {
+                Revue revue = lesRevues.Find(x => x.Id.Equals(txbAbonnementRevueNumeroRevue.Text.Trim()));
+                if (revue != null)
+                {
+                    AfficheAbonnementRevueInfos(revue);
+                }
+                else
+                {
+                    MessageBox.Show("numéro introuvable");
+                    VideAbonnementRevueInfos();
+                }
+            }
+            else
+            {
+                VideAbonnementRevueInfos();
+            }
+        }
+
+        /// <summary>
+        /// Si le numéro de revue est modifié, la zone d'abonnements est vidée et inactive
+        /// les informations de la revue sont aussi effacées
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txbAbonnementRevueNumeroRevue_TextChanged(object sender, EventArgs e)
+        {
+            // accesCommandeDvdGroupBox(false);
+            VideAbonnementRevueInfos();
+        }
+
+        /// <summary>
+        /// Affichage des informations de la revue sélectionnée et les exemplaires
+        /// </summary>
+        /// <param name="revue"></param>
+        private void AfficheAbonnementRevueInfos(Revue revue)
+        {
+            // informations sur l'abonnement
+            txbAbonnementRevueTitre.Text = revue.Titre;
+            txbAbonnementRevuePeriodicite.Text = revue.Periodicite;
+            txbAbonnementRevueDelaiMiseADispo.Text = revue.DelaiMiseADispo.ToString();
+            txbAbonnementRevueGenre.Text = revue.Genre;
+            txbAbonnementRevuePublic.Text = revue.Public;
+            txbAbonnementRevueRayon.Text = revue.Rayon;
+            txbAbonnementRevueImage.Text = revue.Image;
+            chkAbonnementRevueEmpruntable.Checked = revue.Empruntable;
+            string image = revue.Image;
+            try
+            {
+                pcbAbonnementRevueImage.Image = Image.FromFile(image);
+            }
+            catch
+            {
+                pcbAbonnementRevueImage.Image = null;
+            }
+            // affiche la liste des commandes du DVD
+            AfficheAbonnementsRevue();
+
+            // accès à la zone d'ajout d'un exemplaire
+            // accesAbonnementRevueGroupBox(true);
+        }
+
+        /// <summary>
+        /// Récupération de la liste des abonnement à une revue puis affichage dans la liste
+        /// </summary>
+        private void AfficheAbonnementsRevue()
+        {
+            string idDocument = txbAbonnementRevueNumeroRevue.Text.Trim();
+            lesAbonnements = controle.GetAbonnement(idDocument);
+            RemplirAbonnementRevueListe(lesAbonnements);
+        }
+
+        /// <summary>
+        /// Vide les zones d'affchage des informations de la revue
+        /// </summary>
+        private void VideAbonnementRevueInfos()
+        {
+            txbAbonnementRevueTitre.Text = "";
+            txbAbonnementRevuePeriodicite.Text = "";
+            txbAbonnementRevueDelaiMiseADispo.Text = "";
+            txbAbonnementRevueGenre.Text = "";
+            txbAbonnementRevuePublic.Text = "";
+            txbAbonnementRevueRayon.Text = "";
+            txbAbonnementRevueImage.Text = "";
+            chkAbonnementRevueEmpruntable.Checked = false;
+            pcbAbonnementRevueImage.Image = null;
+            lesAbonnements = new List<Abonnement>();
+            RemplirAbonnementRevueListe(lesAbonnements);
+            // accesAbonnementRevueGroupBox(false);
+        }
+
+
+        /// <summary>
+        /// Vide les zones d'affichage des informations de l'exemplaire
+        /// </summary>
+        /*        private void VideReceptionExemplaireInfos()
+                {
+                    txbReceptionExemplaireImage.Text = "";
+                    txbReceptionExemplaireNumero.Text = "";
+                    pcbReceptionExemplaireImage.Image = null;
+                    dtpReceptionExemplaireDate.Value = DateTime.Now;
+                }*/
+
+        /// <summary>
+        /// Permet ou interdit l'accès à la gestion de la réception d'un exemplaire
+        /// et vide les objets graphiques
+        /// </summary>
+        /// <param name="acces"></param>
+        /*        private void accesReceptionExemplaireGroupBox(bool acces)
+                {
+                    VideReceptionExemplaireInfos();
+                    grpReceptionExemplaire.Enabled = acces;
+                }*/
+
+        /// <summary>
+        /// Recherche image sur disque (pour l'exemplaire)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void btnReceptionExemplaireImage_Click(object sender, EventArgs e)
+                {
+                    string filePath = "";
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                    openFileDialog.InitialDirectory = "c:\\";
+                    openFileDialog.Filter = "Files|*.jpg;*.bmp;*.jpeg;*.png;*.gif";
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        filePath = openFileDialog.FileName;
+                    }
+                    txbReceptionExemplaireImage.Text = filePath;
+                    try
+                    {
+                        pcbReceptionExemplaireImage.Image = Image.FromFile(filePath);
+                    }
+                    catch
+                    {
+                        pcbReceptionExemplaireImage.Image = null;
+                    }
+                }*/
+
+        /// <summary>
+        /// Enregistrement du nouvel exemplaire
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void btnReceptionExemplaireValider_Click(object sender, EventArgs e)
+                {
+                    if (!txbReceptionExemplaireNumero.Text.Equals(""))
+                    {
+                        try
+                        {
+                            int numero = int.Parse(txbReceptionExemplaireNumero.Text);
+                            DateTime dateAchat = dtpReceptionExemplaireDate.Value;
+                            string photo = txbReceptionExemplaireImage.Text;
+                            string idEtat = ETATNEUF;
+                            string idDocument = txbReceptionRevueNumero.Text;
+                            Exemplaire exemplaire = new Exemplaire(numero, dateAchat, photo, idEtat, idDocument);
+                            if (controle.CreerExemplaire(exemplaire))
+                            {
+                                VideReceptionExemplaireInfos();
+                                afficheReceptionExemplairesRevue();
+                            }
+                            else
+                            {
+                                MessageBox.Show("numéro de publication déjà existant", "Erreur");
+                            }
+                        }
+                        catch
+                        {
+                            MessageBox.Show("le numéro de parution doit être numérique", "Information");
+                            txbReceptionExemplaireNumero.Text = "";
+                            txbReceptionExemplaireNumero.Focus();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("numéro de parution obligatoire", "Information");
+                    }
+                }*/
+
+        /// <summary>
+        /// Tri sur une colonne
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void dgvAbonnementRevueListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            /* string titreColonne = dgvCommandeLivresListe.Columns[e.ColumnIndex].HeaderText;
+            List<Commande> sortedList = new List<Commande>();
+            switch (titreColonne)
+            {
+                case "Numero":
+                    sortedList = lesExemplaires.OrderBy(o => o.Numero).Reverse().ToList();
+                    break;
+                case "DateAchat":
+                    sortedList = lesExemplaires.OrderBy(o => o.DateAchat).Reverse().ToList();
+                    break;
+                case "Photo":
+                    sortedList = lesExemplaires.OrderBy(o => o.Photo).ToList();
+                    break;
+            }
+            RemplirCommandeLivresListe(sortedList);*/
+        }
+
+        /// <summary>
+        /// Sélection d'une ligne complète et affichage de l'image sz l'exemplaire
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /*        private void dgvReceptionExemplairesListe_SelectionChanged(object sender, EventArgs e)
+                {
+                    if (dgvReceptionExemplairesListe.CurrentCell != null)
+                    {
+                        Exemplaire exemplaire = (Exemplaire)bdgExemplairesListe.List[bdgExemplairesListe.Position];
+                        string image = exemplaire.Photo;
+                        try
+                        {
+                            pcbReceptionExemplaireRevueImage.Image = Image.FromFile(image);
+                        }
+                        catch
+                        {
+                            pcbReceptionExemplaireRevueImage.Image = null;
+                        }
+                    }
+                    else
+                    {
+                        pcbReceptionExemplaireRevueImage.Image = null;
+                    }
+                }*/
+        #endregion
     }
 }

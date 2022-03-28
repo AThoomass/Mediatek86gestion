@@ -79,6 +79,27 @@ namespace Mediatek86.modele
         }
 
         /// <summary>
+        /// Retourne tous les états de suivi à partir de la bdd
+        /// </summary>
+        /// <returns>Collection d'objets Suivi</returns>
+        public static List<Suivi> GetAllSuivis()
+        {
+            List<Suivi> lesSuivis = new List<Suivi>();
+            string req = "Select * from suivi";
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, null);
+
+            while (curs.Read())
+            {
+                Suivi leSuivi = new Suivi((int)curs.Field("id"), (string)curs.Field("libelle"));
+                lesSuivis.Add(leSuivi);
+            }
+            curs.Close();
+            return lesSuivis;
+        }
+
+        /// <summary>
         /// Retourne toutes les livres à partir de la BDD
         /// </summary>
         /// <returns>Liste d'objets Livre</returns>
@@ -233,6 +254,78 @@ namespace Mediatek86.modele
             curs.Close();
 
             return lesExemplaires;
+        }
+
+        /// <summary>
+        /// Retourne les commandes d'un livre ou d'un DVD à partir de la BDD
+        /// </summary>
+        /// <param name="idDoc">Identifiant du livre ou DVD</param>
+        /// <returns>Liste d'objets CommandeDocument</returns>
+        public static List<CommandeDocument> GetCommandeDocument(string idDoc)
+        {
+            List<CommandeDocument> lesCommandes = new List<CommandeDocument>();
+            string req = "Select c.id, c.dateCommande, c.montant, cd.nbExemplaire, cd.idLivreDvd, scd.idSuivi, s.libelle ";
+            req += "from commande c join commandedocument cd on c.id=cd.id ";
+            req += "join suivicommandedoc scd on c.id=scd.idcommande ";
+            req += "join suivi s on scd.idsuivi = s.id ";
+            req += "where cd.idLivreDvd = @id ";
+            req += "order by c.dateCommande DESC";
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@id", idDoc}
+                };
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, parameters);
+
+            while (curs.Read())
+            {
+                string id = (string)curs.Field("id");
+                DateTime dateCommande = (DateTime)curs.Field("datecommande");
+                double montant = (double)curs.Field("montant");
+                int nbExemplaire = (int)curs.Field("nbExemplaire");
+                string idLivreDvd = (string)curs.Field("idLivreDvd");
+                int idSuivi = (int)curs.Field("idSuivi");
+                string libelleSuivi = (string)curs.Field("libelle");
+                CommandeDocument commandeDocument = new CommandeDocument(id, dateCommande, montant, nbExemplaire, idSuivi, libelleSuivi, idLivreDvd);
+                lesCommandes.Add(commandeDocument);
+            }
+            curs.Close();
+            return lesCommandes;
+        }
+
+        /// <summary>
+        /// Retourne les abonnements à une revue à partir de la BDD
+        /// </summary>
+        /// <param name="idDoc">identifiant de la revue</param>
+        /// <returns>Liste d'objets Abonnement</returns>
+        public static List<Abonnement> GetAbonnement(string idDoc)
+        {
+            List<Abonnement> lesAbonnements = new List<Abonnement>();
+            string req = "Select c.id, c.dateCommande, c.montant, a.dateFinAbonnement, a.idRevue ";
+            req += "from commande c join abonnement a on c.id=a.id ";
+            req += "where a.idRevue = @id ";
+            req += "order by c.dateCommande DESC";
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@id", idDoc}
+                };
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, parameters);
+
+            while (curs.Read())
+            {
+                string id = (string)curs.Field("id");
+                DateTime dateCommande = (DateTime)curs.Field("datecommande");
+                double montant = (double)curs.Field("montant");
+                DateTime dateFinAbonnement = (DateTime)curs.Field("dateFinAbonnement");
+                string idRevue = (string)curs.Field("idRevue");
+                Abonnement abonnement = new Abonnement(id, dateCommande, montant, dateFinAbonnement, idRevue);
+                lesAbonnements.Add(abonnement);
+            }
+            curs.Close();
+            return lesAbonnements;
         }
 
         /// <summary>

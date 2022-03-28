@@ -14,6 +14,7 @@ namespace Mediatek86.controleur
         private readonly List<Categorie> lesRayons;
         private readonly List<Categorie> lesPublics;
         private readonly List<Categorie> lesGenres;
+        private readonly List<Suivi> lesSuivis;
 
         /// <summary>
         /// Ouverture de la fenêtre
@@ -26,6 +27,7 @@ namespace Mediatek86.controleur
             lesGenres = Dao.GetAllGenres();
             lesRayons = Dao.GetAllRayons();
             lesPublics = Dao.GetAllPublics();
+            lesSuivis = Dao.GetAllSuivis();
             FrmMediatek frmMediatek = new FrmMediatek(this);
             frmMediatek.ShowDialog();
         }
@@ -82,6 +84,35 @@ namespace Mediatek86.controleur
         public List<Categorie> GetAllPublics()
         {
             return lesPublics;
+        }
+
+        /// <summary>
+        /// Getter sur les suivis
+        /// </summary>
+        /// <returns>Collection d'objets Suivi</returns>
+        public List<Suivi> GetAllSuivis()
+        {
+            return lesSuivis;
+        }
+
+        /// <summary>
+        /// Récupère les commandes d'un livre ou d'un DVD depuis la bdd
+        /// </summary>
+        /// <param name="idDocument">Identifiant du livre ou DVD concerné</param>
+        /// <returns>Collection d'objets de type CommandeDocument</returns>
+        public List<CommandeDocument> GetCommandeDocument(string idDocument)
+        {
+            return Dao.GetCommandeDocument(idDocument);
+        }
+
+        /// <summary>
+        /// récupère les abonnements d'une revue
+        /// </summary>
+        /// <param name="idDocument"></param>
+        /// <returns></returns>
+        public List<Abonnement> GetAbonnement(string idDocument)
+        {
+            return Dao.GetAbonnement(idDocument);
         }
 
         /// <summary>
