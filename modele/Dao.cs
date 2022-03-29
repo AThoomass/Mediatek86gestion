@@ -337,7 +337,10 @@ namespace Mediatek86.modele
         {
             try
             {
-                string req = "insert into exemplaire values (@idDocument,@numero,@dateAchat,@photo,@idEtat)";
+                List<string> req = new List<string>
+                {
+                    "insert into exemplaire values (@idDocument,@numero,@dateAchat,@photo,@idEtat)"
+                };
                 Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
                     { "@idDocument", exemplaire.IdDocument},
@@ -350,7 +353,100 @@ namespace Mediatek86.modele
                 curs.ReqUpdate(req, parameters);
                 curs.Close();
                 return true;
-            }catch{
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Insertion d'une CommandeDocument dans la base de données
+        /// </summary>
+        /// <param name="commandeDocument">La CommandeDocument à ajouter</param>
+        /// <returns>Le message de confirmation ou d'erreur</returns>
+        public static string CreerCommandeDocument(CommandeDocument commandeDocument)
+        {
+            try
+            {
+                List<string> requetes = new List<string>
+                {
+                    "insert into commande values (@id, @dateCommande, @montant) ",
+                    "insert into commandedocument values (@id, @nbExemplaire, @idLivreDvd) ",
+                    "insert into suivicommandedoc values (@idSuivi, @id)"
+                };
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"@id", commandeDocument.Id },
+                    {"@dateCommande", commandeDocument.DateCommande },
+                    {"@montant", commandeDocument.Montant },
+                    {"@nbExemplaire", commandeDocument.NbExemplaires },
+                    {"@idLivreDvd", commandeDocument.IdLivreDvd },
+                    {"@idSuivi", commandeDocument.IdSuivi },
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(requetes, parameters);
+                curs.Close();
+                return "OK";
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+
+        /// <summary>
+        /// Suppression d'une CommandeDocument de la bdd
+        /// </summary>
+        /// <param name="id">identifiant de la CommandeDocument à supprimer</param>
+        /// <returns>Ttrue si la suppression a réussi</returns>
+        public static bool SupprCommandeDocument(string id)
+        {
+            try
+            {
+                List<string> requetes = new List<string>();
+                requetes.Add("delete from suivicommandedoc where idcommande=@id");
+                requetes.Add("delete from commandedocument where id=@id");
+                requetes.Add("delete from commande where id=@id");
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"@id", id },
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(requetes, parameters);
+                curs.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Modification d'état de suivi d'une CommandeDocument
+        /// </summary>
+        /// <param name="idCommandeDocument">identifiant de la CommandeDocument à modifier</param>
+        /// <param name="idSuivi">identifiant du nouveau état de suivi</param>
+        /// <returns>True si la modification a réussi</returns>
+        public static bool ModifSuiviCommandeDocument(string idCommandeDocument, int idSuivi)
+        {
+            try
+            {
+                List<string> requetes = new List<string>();
+                requetes.Add("update suivicommandedoc set idsuivi=@idsuivi where idcommande=@idcommande");
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"@idsuivi", idSuivi },
+                    {"@idcommande", idCommandeDocument },
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(requetes, parameters);
+                curs.Close();
+                return true;
+            }
+            catch
+            {
                 return false;
             }
         }

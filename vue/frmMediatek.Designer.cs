@@ -29,8 +29,8 @@ namespace Mediatek86.vue
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabOngletsApplication = new System.Windows.Forms.TabControl();
             this.tabLivres = new System.Windows.Forms.TabPage();
             this.grpLivresInfos = new System.Windows.Forms.GroupBox();
@@ -192,7 +192,7 @@ namespace Mediatek86.vue
             this.label57 = new System.Windows.Forms.Label();
             this.txbCommandeLivreMontant = new System.Windows.Forms.TextBox();
             this.btnCommandeLivreValider = new System.Windows.Forms.Button();
-            this.numCommandeLivreNombreExemplaire = new System.Windows.Forms.NumericUpDown();
+            this.nudCommandeLivreNombreExemplaire = new System.Windows.Forms.NumericUpDown();
             this.dtpCommandeLivreDate = new System.Windows.Forms.DateTimePicker();
             this.label69 = new System.Windows.Forms.Label();
             this.label68 = new System.Windows.Forms.Label();
@@ -325,7 +325,7 @@ namespace Mediatek86.vue
             this.tabCommandeLivre.SuspendLayout();
             this.grpGestionCommandeLivre.SuspendLayout();
             this.grpCommandeLivre.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCommandeLivreNombreExemplaire)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCommandeLivreNombreExemplaire)).BeginInit();
             this.grpCommandeLivreRecherche.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommandeLivreListe)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcbCommandeLivreImage)).BeginInit();
@@ -1942,6 +1942,7 @@ namespace Mediatek86.vue
             this.btnCommandeLivreRegler.TabStop = false;
             this.btnCommandeLivreRegler.Text = "Régler";
             this.btnCommandeLivreRegler.UseVisualStyleBackColor = true;
+            this.btnCommandeLivreRegler.Click += new System.EventHandler(this.btnCommandeLivreRegler_Click);
             // 
             // btnCommandeLivreConfirmerLivraison
             // 
@@ -1954,6 +1955,7 @@ namespace Mediatek86.vue
             this.btnCommandeLivreConfirmerLivraison.TabStop = false;
             this.btnCommandeLivreConfirmerLivraison.Text = "Confirmer Livraison";
             this.btnCommandeLivreConfirmerLivraison.UseVisualStyleBackColor = true;
+            this.btnCommandeLivreConfirmerLivraison.Click += new System.EventHandler(this.btnCommandeLivreConfirmerLivraison_Click);
             // 
             // btnCommandeLivreSupprimer
             // 
@@ -1966,6 +1968,7 @@ namespace Mediatek86.vue
             this.btnCommandeLivreSupprimer.TabStop = false;
             this.btnCommandeLivreSupprimer.Text = "Supprimer";
             this.btnCommandeLivreSupprimer.UseVisualStyleBackColor = true;
+            this.btnCommandeLivreSupprimer.Click += new System.EventHandler(this.btnCommandeLivreSupprimer_Click);
             // 
             // btnCommandeLivreAjouter
             // 
@@ -1978,6 +1981,7 @@ namespace Mediatek86.vue
             this.btnCommandeLivreAjouter.TabStop = false;
             this.btnCommandeLivreAjouter.Text = "Ajouter";
             this.btnCommandeLivreAjouter.UseVisualStyleBackColor = true;
+            this.btnCommandeLivreAjouter.Click += new System.EventHandler(this.btnCommandeLivreAjouter_Click);
             // 
             // btnCommandeLivreRelancer
             // 
@@ -1990,6 +1994,7 @@ namespace Mediatek86.vue
             this.btnCommandeLivreRelancer.TabStop = false;
             this.btnCommandeLivreRelancer.Text = "Relancer";
             this.btnCommandeLivreRelancer.UseVisualStyleBackColor = true;
+            this.btnCommandeLivreRelancer.Click += new System.EventHandler(this.btnCommandeLivreRelancer_Click);
             // 
             // grpCommandeLivre
             // 
@@ -1998,7 +2003,7 @@ namespace Mediatek86.vue
             this.grpCommandeLivre.Controls.Add(this.label57);
             this.grpCommandeLivre.Controls.Add(this.txbCommandeLivreMontant);
             this.grpCommandeLivre.Controls.Add(this.btnCommandeLivreValider);
-            this.grpCommandeLivre.Controls.Add(this.numCommandeLivreNombreExemplaire);
+            this.grpCommandeLivre.Controls.Add(this.nudCommandeLivreNombreExemplaire);
             this.grpCommandeLivre.Controls.Add(this.dtpCommandeLivreDate);
             this.grpCommandeLivre.Controls.Add(this.label69);
             this.grpCommandeLivre.Controls.Add(this.label68);
@@ -2019,6 +2024,7 @@ namespace Mediatek86.vue
             this.btnCommandeLivreAnnuler.TabIndex = 47;
             this.btnCommandeLivreAnnuler.Text = "Annuler";
             this.btnCommandeLivreAnnuler.UseVisualStyleBackColor = true;
+            this.btnCommandeLivreAnnuler.Click += new System.EventHandler(this.btnCommandeLivreAnnuler_Click);
             // 
             // txbCommandeLivreNumeroCommande
             // 
@@ -2053,20 +2059,21 @@ namespace Mediatek86.vue
             this.btnCommandeLivreValider.TabIndex = 6;
             this.btnCommandeLivreValider.Text = "Valider";
             this.btnCommandeLivreValider.UseVisualStyleBackColor = true;
+            this.btnCommandeLivreValider.Click += new System.EventHandler(this.btnCommandeLivreValider_Click);
             // 
-            // numCommandeLivreNombreExemplaire
+            // nudCommandeLivreNombreExemplaire
             // 
-            this.numCommandeLivreNombreExemplaire.Location = new System.Drawing.Point(402, 19);
-            this.numCommandeLivreNombreExemplaire.Minimum = new decimal(new int[] {
+            this.nudCommandeLivreNombreExemplaire.Location = new System.Drawing.Point(402, 19);
+            this.nudCommandeLivreNombreExemplaire.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numCommandeLivreNombreExemplaire.Name = "numCommandeLivreNombreExemplaire";
-            this.numCommandeLivreNombreExemplaire.Size = new System.Drawing.Size(110, 20);
-            this.numCommandeLivreNombreExemplaire.TabIndex = 5;
-            this.numCommandeLivreNombreExemplaire.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numCommandeLivreNombreExemplaire.Value = new decimal(new int[] {
+            this.nudCommandeLivreNombreExemplaire.Name = "nudCommandeLivreNombreExemplaire";
+            this.nudCommandeLivreNombreExemplaire.Size = new System.Drawing.Size(110, 20);
+            this.nudCommandeLivreNombreExemplaire.TabIndex = 5;
+            this.nudCommandeLivreNombreExemplaire.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudCommandeLivreNombreExemplaire.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -2184,6 +2191,8 @@ namespace Mediatek86.vue
             this.dgvCommandeLivreListe.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCommandeLivreListe.Size = new System.Drawing.Size(391, 159);
             this.dgvCommandeLivreListe.TabIndex = 52;
+            this.dgvCommandeLivreListe.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvCommandeLivreListe_ColumnHeaderMouseClick);
+            this.dgvCommandeLivreListe.SelectionChanged += new System.EventHandler(this.dgvCommandeLivreListe_SelectionChanged);
             // 
             // txbCommandeLivreImage
             // 
@@ -2248,6 +2257,7 @@ namespace Mediatek86.vue
             this.txbCommandeLivreNumero.Size = new System.Drawing.Size(100, 20);
             this.txbCommandeLivreNumero.TabIndex = 43;
             this.txbCommandeLivreNumero.TextChanged += new System.EventHandler(this.txbCommandeLivreNumero_TextChanged);
+            this.txbCommandeLivreNumero.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txbCommandeLivreNumero_KeyDown);
             // 
             // label59
             // 
@@ -2388,6 +2398,7 @@ namespace Mediatek86.vue
             this.btnCommandeDvdRegler.TabStop = false;
             this.btnCommandeDvdRegler.Text = "Régler";
             this.btnCommandeDvdRegler.UseVisualStyleBackColor = true;
+            this.btnCommandeDvdRegler.Click += new System.EventHandler(this.btnCommandeDvdRegler_Click);
             // 
             // btnCommandeDvdConfirmerLivraison
             // 
@@ -2400,6 +2411,7 @@ namespace Mediatek86.vue
             this.btnCommandeDvdConfirmerLivraison.TabStop = false;
             this.btnCommandeDvdConfirmerLivraison.Text = "Confirmer Livraison";
             this.btnCommandeDvdConfirmerLivraison.UseVisualStyleBackColor = true;
+            this.btnCommandeDvdConfirmerLivraison.Click += new System.EventHandler(this.btnCommandeDvdConfirmerLivraison_Click);
             // 
             // btnCommandeDvdSupprimer
             // 
@@ -2412,6 +2424,7 @@ namespace Mediatek86.vue
             this.btnCommandeDvdSupprimer.TabStop = false;
             this.btnCommandeDvdSupprimer.Text = "Supprimer";
             this.btnCommandeDvdSupprimer.UseVisualStyleBackColor = true;
+            this.btnCommandeDvdSupprimer.Click += new System.EventHandler(this.btnCommandeDvdSupprimer_Click);
             // 
             // btnCommandeDvdAjouter
             // 
@@ -2424,6 +2437,7 @@ namespace Mediatek86.vue
             this.btnCommandeDvdAjouter.TabStop = false;
             this.btnCommandeDvdAjouter.Text = "Ajouter";
             this.btnCommandeDvdAjouter.UseVisualStyleBackColor = true;
+            this.btnCommandeDvdAjouter.Click += new System.EventHandler(this.btnCommandeDvdAjouter_Click);
             // 
             // btnCommandeDvdRelancer
             // 
@@ -2436,6 +2450,7 @@ namespace Mediatek86.vue
             this.btnCommandeDvdRelancer.TabStop = false;
             this.btnCommandeDvdRelancer.Text = "Relancer";
             this.btnCommandeDvdRelancer.UseVisualStyleBackColor = true;
+            this.btnCommandeDvdRelancer.Click += new System.EventHandler(this.btnCommandeDvdRelancer_Click);
             // 
             // grpCommandeDvd
             // 
@@ -2503,6 +2518,7 @@ namespace Mediatek86.vue
             this.btnCommandeDvdAnnuler.TabIndex = 22;
             this.btnCommandeDvdAnnuler.Text = "Annuler";
             this.btnCommandeDvdAnnuler.UseVisualStyleBackColor = true;
+            this.btnCommandeDvdAnnuler.Click += new System.EventHandler(this.btnCommandeDvdAnnuler_Click);
             // 
             // btnCommandeDvdValider
             // 
@@ -2514,6 +2530,7 @@ namespace Mediatek86.vue
             this.btnCommandeDvdValider.TabIndex = 20;
             this.btnCommandeDvdValider.Text = "Valider";
             this.btnCommandeDvdValider.UseVisualStyleBackColor = true;
+            this.btnCommandeDvdValider.Click += new System.EventHandler(this.btnCommandeDvdValider_Click);
             // 
             // label92
             // 
@@ -2647,6 +2664,8 @@ namespace Mediatek86.vue
             this.dgvCommandeDvdListe.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCommandeDvdListe.Size = new System.Drawing.Size(391, 165);
             this.dgvCommandeDvdListe.TabIndex = 52;
+            this.dgvCommandeDvdListe.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvCommandeDvdListe_ColumnHeaderMouseClick);
+            this.dgvCommandeDvdListe.SelectionChanged += new System.EventHandler(this.dgvCommandeDvdListe_SelectionChanged);
             // 
             // txbCommandeDvdImage
             // 
@@ -2703,6 +2722,7 @@ namespace Mediatek86.vue
             this.txbCommandeDvdNumero.Size = new System.Drawing.Size(100, 20);
             this.txbCommandeDvdNumero.TabIndex = 43;
             this.txbCommandeDvdNumero.TextChanged += new System.EventHandler(this.txbCommandeDvdNumero_TextChanged);
+            this.txbCommandeDvdNumero.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txbCommandeDvdNumero_KeyDown);
             // 
             // label72
             // 
@@ -3053,23 +3073,23 @@ namespace Mediatek86.vue
             this.dgvAbonnementRevueListe.AllowUserToDeleteRows = false;
             this.dgvAbonnementRevueListe.AllowUserToResizeColumns = false;
             this.dgvAbonnementRevueListe.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvAbonnementRevueListe.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvAbonnementRevueListe.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.dgvAbonnementRevueListe.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvAbonnementRevueListe.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvAbonnementRevueListe.DefaultCellStyle = dataGridViewCellStyle14;
             this.dgvAbonnementRevueListe.Location = new System.Drawing.Point(131, 223);
             this.dgvAbonnementRevueListe.MultiSelect = false;
             this.dgvAbonnementRevueListe.Name = "dgvAbonnementRevueListe";
@@ -3276,7 +3296,7 @@ namespace Mediatek86.vue
             this.grpGestionCommandeLivre.ResumeLayout(false);
             this.grpCommandeLivre.ResumeLayout(false);
             this.grpCommandeLivre.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCommandeLivreNombreExemplaire)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCommandeLivreNombreExemplaire)).EndInit();
             this.grpCommandeLivreRecherche.ResumeLayout(false);
             this.grpCommandeLivreRecherche.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommandeLivreListe)).EndInit();
@@ -3481,7 +3501,7 @@ namespace Mediatek86.vue
         private System.Windows.Forms.Label label68;
         private System.Windows.Forms.Label label67;
         private System.Windows.Forms.Button btnCommandeLivreValider;
-        private System.Windows.Forms.NumericUpDown numCommandeLivreNombreExemplaire;
+        private System.Windows.Forms.NumericUpDown nudCommandeLivreNombreExemplaire;
         private System.Windows.Forms.GroupBox grbCommandeDvdRecherche;
         private System.Windows.Forms.TextBox txbCommandeDvdDuree;
         private System.Windows.Forms.Label label83;
