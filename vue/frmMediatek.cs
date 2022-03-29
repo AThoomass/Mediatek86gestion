@@ -43,9 +43,6 @@ namespace Mediatek86.vue
             this.controle = controle;
         }
 
-        
-
-
         #region modules communs
 
         /// <summary>
@@ -94,13 +91,49 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
+        /// Affichage d'un MessageBox pour demander validation de suppression d'un abonnement
+        /// </summary>
+        /// <returns></returns>
+        private bool ValidationSuppressionAbonnement()
+        {
+            return (MessageBox.Show("Etes-vous sûr de vouloir supprimer cet abonnement ?", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes);
+        }
+
+        /// <summary>
+        /// Affichage d'un MessageBox pour demander validation de suppression d'une commande
+        /// </summary>
+        /// <returns></returns>
+        private bool ValidationSuppressionCommande()
+        {
+            return (MessageBox.Show("Etes-vous sûr de vouloir supprimer cette commande ?", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes);
+        }
+
+        /// <summary>
         /// Mets tous les booléens concernant saisies et modifications en 'false'
         /// </summary>
         private void CancelAllSaisies()
         {
             saisieCommandeLivre = false;
             saisieCommandeDvd = false;
-            //saisieAbonnementRevue = false;
+            saisieAbonnementRevue = false;
+        }
+
+        /// <summary>
+        /// Evénement de changement d'onglet. Vérifie si une saisie est en cours
+        /// Si oui, demande validation de l'utilisateur avant d'abandonner saisie et changer d'onglet
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabOngletsApplication_Deselecting(object sender, TabControlCancelEventArgs e)
+        {
+            if ((saisieCommandeLivre || saisieCommandeDvd || saisieAbonnementRevue) && !VerifAbandonSaisie())
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                CancelAllSaisies();
+            }
         }
 
         /// <summary>

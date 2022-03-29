@@ -225,8 +225,9 @@ namespace Mediatek86.modele
         /// <summary>
         /// Retourne les exemplaires d'une revue
         /// </summary>
+        /// <param name="idDoct"></param>
         /// <returns>Liste d'objets Exemplaire</returns>
-        public static List<Exemplaire> GetExemplairesRevue(string idDocument)
+        public static List<Exemplaire> GetExemplairesRevue(string idDoc)
         {
             List<Exemplaire> lesExemplaires = new List<Exemplaire>();
             string req = "Select e.id, e.numero, e.dateAchat, e.photo, e.idEtat ";
@@ -235,7 +236,7 @@ namespace Mediatek86.modele
             req += "order by e.dateAchat DESC";
             Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
-                    { "@id", idDocument}
+                    { "@id", idDoc}
                 };
 
             BddMySql curs = BddMySql.GetInstance(connectionString);
@@ -398,16 +399,18 @@ namespace Mediatek86.modele
         /// <summary>
         /// Suppression d'une CommandeDocument de la bdd
         /// </summary>
-        /// <param name="id">identifiant de la CommandeDocument à supprimer</param>
-        /// <returns>Ttrue si la suppression a réussi</returns>
+        /// <param name="id">Identifiant de la CommandeDocument à supprimer</param>
+        /// <returns>True si la suppression a réussi</returns>
         public static bool SupprCommandeDocument(string id)
         {
             try
             {
-                List<string> requetes = new List<string>();
-                requetes.Add("delete from suivicommandedoc where idcommande=@id");
-                requetes.Add("delete from commandedocument where id=@id");
-                requetes.Add("delete from commande where id=@id");
+                List<string> requetes = new List<string>
+                {
+                    "delete from suivicommandedoc where idcommande=@id",
+                    "delete from commandedocument where id=@id",
+                    "delete from commande where id=@id"
+                };
                 Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
                     {"@id", id },
@@ -426,15 +429,17 @@ namespace Mediatek86.modele
         /// <summary>
         /// Modification d'état de suivi d'une CommandeDocument
         /// </summary>
-        /// <param name="idCommandeDocument">identifiant de la CommandeDocument à modifier</param>
-        /// <param name="idSuivi">identifiant du nouveau état de suivi</param>
+        /// <param name="idCommandeDocument">Identifiant de la CommandeDocument à modifier</param>
+        /// <param name="idSuivi">Identifiant du nouveau état de suivi</param>
         /// <returns>True si la modification a réussi</returns>
         public static bool ModifSuiviCommandeDocument(string idCommandeDocument, int idSuivi)
         {
             try
             {
-                List<string> requetes = new List<string>();
-                requetes.Add("update suivicommandedoc set idsuivi=@idsuivi where idcommande=@idcommande");
+                List<string> requetes = new List<string>
+                {
+                    "update suivicommandedoc set idsuivi=@idsuivi where idcommande=@idcommande"
+                };
                 Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
                     {"@idsuivi", idSuivi },
@@ -451,5 +456,66 @@ namespace Mediatek86.modele
             }
         }
 
+        /// <summary>
+        /// Insertion d'un abonnement dans la base de données
+        /// </summary>
+        /// <param name="abonnement">L'abonnement à ajouter</param>
+        /// <returns>Le message de confirmation ou d'erreur</returns>
+        public static string CreerAbonnement(Abonnement abonnement)
+        {
+            try
+            {
+                List<string> requetes = new List<string>
+                {
+                    "insert into commande values (@id, @dateCommande, @montant) ",
+                    "insert into abonnement values (@id, @dateFinAbonnement, @idRevue) "
+                };
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"@id", abonnement.Id },
+                    {"@dateCommande", abonnement.DateCommande },
+                    {"@montant", abonnement.Montant },
+                    {"@dateFinAbonnement", abonnement.DateFinAbonnement },
+                    {"@idRevue", abonnement.IdRevue }
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(requetes, parameters);
+                curs.Close();
+                return "OK";
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+
+        /// <summary>
+        /// Suppression d'un abonnement de la base de données
+        /// </summary>
+        /// <param name="id">Identifiant de l'abonnement à supprimer</param>
+        /// <returns>True si la modification a pu se faire</returns>
+        public static bool SupprAbonnement(string id)
+        {
+            try
+            {
+                List<string> requetes = new List<string>
+                {
+                    "delete from abonnement where id=@id",
+                    "delete from commande where id=@id"
+                };
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"@id", id },
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(requetes, parameters);
+                curs.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

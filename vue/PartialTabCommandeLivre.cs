@@ -20,7 +20,11 @@ namespace Mediatek86.vue
         private bool saisieCommandeLivre = false;
 
         /// <summary>
-        /// Ouverture de l'onglet : blocage en saisie des champs de saisie des infos de la commande
+        /// Ouverture de l'onglet :
+        /// Tous les booléens concernant une saisie sont mis en false (validation d'abandon a été demandé avant changement d'onglet)
+        /// Récupération des livres et suivis depuis le contrôleur
+        /// Désactivation de groupBox de gestion de commandes
+        /// Vide les champs des infos des livres et des détails de commande
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -29,7 +33,9 @@ namespace Mediatek86.vue
             CancelAllSaisies();
             lesLivres = controle.GetAllLivres();
             lesSuivis = controle.GetAllSuivis();
-            accesGestionCommandeLivresGroupBox(false);
+            AccesGestionCommandeLivresGroupBox(false);
+            txbCommandeLivreNumero.Text = "";
+            VideCommandeLivresInfos();
             VideDetailsCommandeLivres();
         }
 
@@ -50,7 +56,7 @@ namespace Mediatek86.vue
             dgvCommandeLivreListe.Columns[6].DefaultCellStyle.FormatProvider = CultureInfo.GetCultureInfo("fr-FR");
             dgvCommandeLivreListe.Columns["dateCommande"].DisplayIndex = 0;
             dgvCommandeLivreListe.Columns["montant"].DisplayIndex = 1;
-            dgvCommandeLivreListe.Columns[4].HeaderCell.Value = "Date";
+            dgvCommandeLivreListe.Columns[5].HeaderCell.Value = "Date";
             dgvCommandeLivreListe.Columns[0].HeaderCell.Value = "Exemplaires";
             dgvCommandeLivreListe.Columns[2].HeaderCell.Value = "Etat";
         }
@@ -88,6 +94,8 @@ namespace Mediatek86.vue
                 else
                 {
                     MessageBox.Show("Numéro introuvable");
+                    txbCommandeLivreNumero.Text = "";
+                    txbCommandeLivreNumero.Focus();
                     VideCommandeLivresInfos();
                 }
             }
@@ -121,7 +129,7 @@ namespace Mediatek86.vue
         {
             if (!saisieCommandeLivre)
             {
-                accesGestionCommandeLivresGroupBox(false);
+                AccesGestionCommandeLivresGroupBox(false);
                 VideCommandeLivresInfos();
             }
         }
@@ -154,7 +162,7 @@ namespace Mediatek86.vue
             AfficheCommandeDocumentLivre();
 
             // accès à la zone d'ajout d'une commande
-            accesGestionCommandeLivresGroupBox(true);
+            AccesGestionCommandeLivresGroupBox(true);
         }
 
         /// <summary>
@@ -196,7 +204,7 @@ namespace Mediatek86.vue
             pcbCommandeLivreImage.Image = null;
             lesCommandeDocument = new List<CommandeDocument>();
             RemplirCommandeLivresListe(lesCommandeDocument);
-            accesGestionCommandeLivresGroupBox(false);
+            AccesGestionCommandeLivresGroupBox(false);
         }
 
         /// <summary>
@@ -215,7 +223,7 @@ namespace Mediatek86.vue
         /// et vide les objets graphiques
         /// </summary>
         /// <param name="acces"></param>
-        private void accesGestionCommandeLivresGroupBox(bool acces)
+        private void AccesGestionCommandeLivresGroupBox(bool acces)
         {
             grpGestionCommandeLivre.Enabled = acces;
             btnCommandeLivreAjouter.Enabled = acces;
@@ -270,7 +278,7 @@ namespace Mediatek86.vue
             }
             else
             {
-                DesActivationModificationCommandeLivres();
+                DesactivationModificationCommandeLivres();
                 VideDetailsCommandeLivres();
             }
         }
@@ -298,7 +306,7 @@ namespace Mediatek86.vue
                     btnCommandeLivreSupprimer.Enabled = false;
                     break;
                 case "Réglée":
-                    DesActivationModificationCommandeLivres();
+                    DesactivationModificationCommandeLivres();
                     break;
             }
         }
@@ -306,12 +314,52 @@ namespace Mediatek86.vue
         /// <summary>
         /// Désactivation des boutons de gestion de commande (sauf ajout)
         /// </summary>
-        private void DesActivationModificationCommandeLivres()
+        private void DesactivationModificationCommandeLivres()
         {
             btnCommandeLivreRelancer.Enabled = false;
             btnCommandeLivreConfirmerLivraison.Enabled = false;
             btnCommandeLivreRegler.Enabled = false;
             btnCommandeLivreSupprimer.Enabled = false;
+        }
+
+        /// <summary>
+        /// Début de saisie de commande de livre 
+        /// </summary>
+        /// <param name="actif"></param>
+        private void DebutSaisieCommandeLivres()
+        {
+            AccesSaisieCommandeLivre(true);
+        }
+
+        /// <summary>
+        /// Fin de saisie de commande de livre
+        /// Affiche les informations de la commande sélectionnée dans la liste
+        /// </summary>
+        private void FinSaisieCommandeLivres()
+        {
+            AccesSaisieCommandeLivre(false);
+            CommandeLivresListeSelection();
+        }
+
+        /// <summary>
+        /// Actionne le booleen saisieCommandeLivres
+        /// Vide les champs de détails d'une commande
+        /// (Dés)active la protection readonly des champs de détails de commande
+        /// (Dés)active les boutons concernant l'ajout, validation et annulation de saisie de commande
+        /// </summary>
+        /// <param name="acces"></param>
+        private void AccesSaisieCommandeLivre(bool acces)
+        {
+            saisieCommandeLivre = acces;
+            VideDetailsCommandeLivres();
+            btnCommandeLivreValider.Enabled = acces;
+            btnCommandeLivreAnnuler.Enabled = acces;
+            btnCommandeLivreAjouter.Enabled = !acces;
+            txbCommandeLivreNumeroCommande.Enabled = acces;
+            dtpCommandeLivreDate.Enabled = acces;
+            nudCommandeLivreNombreExemplaire.Enabled = acces;
+            txbCommandeLivreMontant.Enabled = acces;
+            grpCommandeLivre.Enabled = acces;
         }
 
         /// <summary>
@@ -321,7 +369,7 @@ namespace Mediatek86.vue
         /// <param name="e"></param>
         private void btnCommandeLivreAjouter_Click(object sender, EventArgs e)
         {
-            DesActivationModificationCommandeLivres();
+            DesactivationModificationCommandeLivres();
             DebutSaisieCommandeLivres();
         }
 
@@ -337,47 +385,6 @@ namespace Mediatek86.vue
             {
                 FinSaisieCommandeLivres();
             }
-        }
-
-        /// <summary>
-        /// Début de saisie de commande de livre. 
-        /// Vide et active les champs et active les boutons de validation et d'annulation. 
-        /// Désactive le bouton d'ajout de commande
-        /// </summary>
-        /// <param name="actif"></param>
-        private void DebutSaisieCommandeLivres()
-        {
-            saisieCommandeLivre = true;
-            VideDetailsCommandeLivres();
-            btnCommandeLivreValider.Enabled = true;
-            btnCommandeLivreAnnuler.Enabled = true;
-            btnCommandeLivreAjouter.Enabled = false;
-            txbCommandeLivreNumeroCommande.Enabled = true;
-            dtpCommandeLivreDate.Enabled = true;
-            nudCommandeLivreNombreExemplaire.Enabled = true;
-            txbCommandeLivreMontant.Enabled = true;
-            grpCommandeLivre.Enabled = true;
-        }
-
-        /// <summary>
-        /// Fin de saisie de commande de livre
-        /// Vide et désactive les champs et désactive les boutons de validation et d'annulation
-        /// Active le bouton d'ajout de commande
-        /// Affiche les informations de la commande sélectionnée dans la liste
-        /// </summary>
-        private void FinSaisieCommandeLivres()
-        {
-            saisieCommandeLivre = false;
-            VideDetailsCommandeLivres();
-            btnCommandeLivreValider.Enabled = false;
-            btnCommandeLivreAnnuler.Enabled = false;
-            btnCommandeLivreAjouter.Enabled = true;
-            txbCommandeLivreNumeroCommande.Enabled = false;
-            dtpCommandeLivreDate.Enabled = false;
-            nudCommandeLivreNombreExemplaire.Enabled = false;
-            txbCommandeLivreMontant.Enabled = false;
-            grpCommandeLivre.Enabled = false;
-            CommandeLivresListeSelection();
         }
 
         /// <summary>
@@ -442,7 +449,7 @@ namespace Mediatek86.vue
         /// <param name="e"></param>
         private void btnCommandeLivreSupprimer_Click(object sender, EventArgs e)
         {
-            if (ValidationSuppression("cette commande"))
+            if (ValidationSuppressionCommande())
             {
                 CommandeDocument commandeDocument = (CommandeDocument)bdgCommandesLivreListe.List[bdgCommandesLivreListe.Position];
                 if (controle.SupprCommandeDocument(commandeDocument.Id))
@@ -504,6 +511,10 @@ namespace Mediatek86.vue
                 if (controle.ModifSuiviCommandeDocument(idCommandeDocument, nouveauSuivi.Id))
                 {
                     AfficheCommandeDocumentLivre();
+                }
+                else
+                {
+                    MessageBox.Show("Une erreur s'est produite.", "Erreur");
                 }
             }
         }

@@ -33,8 +33,9 @@ namespace Mediatek86.vue
             CancelAllSaisies();
             lesDvd = controle.GetAllDvd();
             lesSuivis = controle.GetAllSuivis();
+            AccesGestionCommandeDvdGroupBox(false);
+            txbCommandeDvdNumero.Text = "";
             VideCommandeDvdInfos();
-            accesGestionCommandeDvdGroupBox(false);
             VideDetailsCommandeDvd();
         }
 
@@ -55,7 +56,7 @@ namespace Mediatek86.vue
             dgvCommandeDvdListe.Columns[6].DefaultCellStyle.FormatProvider = CultureInfo.GetCultureInfo("fr-FR");
             dgvCommandeDvdListe.Columns["dateCommande"].DisplayIndex = 0;
             dgvCommandeDvdListe.Columns["montant"].DisplayIndex = 1;
-            dgvCommandeDvdListe.Columns[4].HeaderCell.Value = "Date";
+            dgvCommandeDvdListe.Columns[5].HeaderCell.Value = "Date";
             dgvCommandeDvdListe.Columns[0].HeaderCell.Value = "Exemplaires";
             dgvCommandeDvdListe.Columns[2].HeaderCell.Value = "Etat";
         }
@@ -126,7 +127,7 @@ namespace Mediatek86.vue
         {
             if (!saisieCommandeDvd)
             {
-                accesGestionCommandeDvdGroupBox(false);
+                AccesGestionCommandeDvdGroupBox(false);
                 VideCommandeDvdInfos();
             }
         }
@@ -160,7 +161,7 @@ namespace Mediatek86.vue
             AfficheCommandeDocumentDvd();
 
             // accès à la zone d'ajout d'un exemplaire
-            accesGestionCommandeDvdGroupBox(true);
+            AccesGestionCommandeDvdGroupBox(true);
         }
 
         /// <summary>
@@ -202,7 +203,7 @@ namespace Mediatek86.vue
             pcbCommandeDvdImage.Image = null;
             lesCommandeDocument = new List<CommandeDocument>();
             RemplirCommandeDvdListe(lesCommandeDocument);
-            accesGestionCommandeDvdGroupBox(false);
+            AccesGestionCommandeDvdGroupBox(false);
         }
 
         /// <summary>
@@ -221,7 +222,7 @@ namespace Mediatek86.vue
         /// et vide les objets graphiques
         /// </summary>
         /// <param name="acces"></param>
-        private void accesGestionCommandeDvdGroupBox(bool acces)
+        private void AccesGestionCommandeDvdGroupBox(bool acces)
         {
             grpGestionCommandeDvd.Enabled = acces;
             btnCommandeDvdAjouter.Enabled = acces;
@@ -320,6 +321,46 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
+        /// Début de saisie de commande de DVD. 
+        /// </summary>
+        /// <param name="actif"></param>
+        private void DebutSaisieCommandeDvd()
+        {
+            AccesSaisieCommandeDvd(true);
+        }
+
+        /// <summary>
+        /// Fin de saisie de commande de DVD
+        /// Affiche les informations de la commande sélectionnée dans la liste
+        /// </summary>
+        private void FinSaisieCommandeDvd()
+        {
+            AccesSaisieCommandeDvd(false);
+            CommandeDvdListeSelection();
+        }
+
+        /// <summary>
+        /// Actionne le booleen saisieCommandeDvd
+        /// Vide les champs de détails d'une commande
+        /// (Dés)active la protection readonly des champs de détails de commande
+        /// (Dés)active les boutons concernant l'ajout, validation et annulation de saisie de commande
+        /// </summary>
+        /// <param name="accces"></param>
+        private void AccesSaisieCommandeDvd(bool accces)
+        {
+            saisieCommandeDvd = accces;
+            VideDetailsCommandeDvd();
+            btnCommandeDvdValider.Enabled = accces;
+            btnCommandeDvdAnnuler.Enabled = accces;
+            btnCommandeDvdAjouter.Enabled = !accces;
+            txbCommandeDvdNumeroCommande.Enabled = accces;
+            dtpCommandeDvdDateCommande.Enabled = accces;
+            nudCommandeDvdExemplaires.Enabled = accces;
+            txbCommandeDvdMontant.Enabled = accces;
+            grpCommandeDvd.Enabled = accces;
+        }
+
+        /// <summary>
         /// Evénement clic sur le bouton d'ajout de commande de livre
         /// </summary>
         /// <param name="sender"></param>
@@ -342,47 +383,6 @@ namespace Mediatek86.vue
             {
                 FinSaisieCommandeDvd();
             }
-        }
-
-        /// <summary>
-        /// Début de saisie de commande de DVD. 
-        /// Vide et active les champs et active les boutons de validation et d'annulation. 
-        /// Désactive le bouton d'ajout de commande
-        /// </summary>
-        /// <param name="actif"></param>
-        private void DebutSaisieCommandeDvd()
-        {
-            saisieCommandeDvd = true;
-            VideDetailsCommandeDvd();
-            btnCommandeDvdValider.Enabled = true;
-            btnCommandeDvdAnnuler.Enabled = true;
-            btnCommandeDvdAjouter.Enabled = false;
-            txbCommandeDvdNumeroCommande.Enabled = true;
-            dtpCommandeDvdDateCommande.Enabled = true;
-            nudCommandeDvdExemplaires.Enabled = true;
-            txbCommandeDvdMontant.Enabled = true;
-            grpCommandeDvd.Enabled = true;
-        }
-
-        /// <summary>
-        /// Fin de saisie de commande de DVD
-        /// Vide et désactive les champs et désactive les boutons de validation et d'annulation
-        /// Active le bouton d'ajout de commande
-        /// Affiche les informations de la commande sélectionnée dans la liste
-        /// </summary>
-        private void FinSaisieCommandeDvd()
-        {
-            saisieCommandeDvd = false;
-            VideDetailsCommandeDvd();
-            btnCommandeDvdValider.Enabled = false;
-            btnCommandeDvdAnnuler.Enabled = false;
-            btnCommandeDvdAjouter.Enabled = true;
-            txbCommandeDvdNumeroCommande.Enabled = false;
-            dtpCommandeDvdDateCommande.Enabled = false;
-            nudCommandeDvdExemplaires.Enabled = false;
-            txbCommandeDvdMontant.Enabled = false;
-            grpCommandeDvd.Enabled = false;
-            CommandeDvdListeSelection();
         }
 
         /// <summary>
@@ -447,7 +447,7 @@ namespace Mediatek86.vue
         /// <param name="e"></param>
         private void btnCommandeDvdSupprimer_Click(object sender, EventArgs e)
         {
-            if (ValidationSuppression("cette commande"))
+            if (ValidationSuppressionCommande())
             {
                 CommandeDocument commandeDocument = (CommandeDocument)bdgCommandesDvdListe.List[bdgCommandesDvdListe.Position];
                 if (controle.SupprCommandeDocument(commandeDocument.Id))
