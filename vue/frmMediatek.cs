@@ -43,6 +43,20 @@ namespace Mediatek86.vue
             this.controle = controle;
         }
 
+        /// <summary>
+        /// Dès l'ouverture de l'application la vue d'alerte de fin d'abonnements s'ouvre
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmMediatek_Shown(object sender, EventArgs e)
+        {
+            FrmAlerteFinAbonnement alerteFinAbonnements = new FrmAlerteFinAbonnement(controle)
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            alerteFinAbonnements.ShowDialog();
+        }
+
         #region modules communs
 
         /// <summary>

@@ -95,6 +95,7 @@
     <Compile Include="metier\CommandeDocument.cs" />
     <Compile Include="metier\Dvd.cs" />
     <Compile Include="metier\Etat.cs" />
+    <Compile Include="metier\FinAbonnement.cs" />
     <Compile Include="metier\LivreDvd.cs" />
     <Compile Include="metier\Public.cs" />
     <Compile Include="metier\Rayon.cs" />
@@ -106,6 +107,12 @@
     <Compile Include="metier\Livre.cs" />
     <Compile Include="metier\Exemplaire.cs" />
     <Compile Include="metier\Revue.cs" />
+    <Compile Include="vue\FrmAlerteFinAbonnement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vue\FrmAlerteFinAbonnement.Designer.cs">
+      <DependentUpon>FrmAlerteFinAbonnement.cs</DependentUpon>
+    </Compile>
     <Compile Include="vue\FrmMediatek.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +152,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="vue\FrmAlerteFinAbonnement.resx">
+      <DependentUpon>FrmAlerteFinAbonnement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="vue\FrmMediatek.resx">
       <DependentUpon>FrmMediatek.cs</DependentUpon>
     </EmbeddedResource>

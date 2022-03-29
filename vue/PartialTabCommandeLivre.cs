@@ -484,7 +484,10 @@ namespace Mediatek86.vue
         {
             CommandeDocument commandeDocument = (CommandeDocument)bdgCommandesLivreListe.List[bdgCommandesLivreListe.Position];
             Suivi nouveauSuivi = lesSuivis.Find(suivi => suivi.Libelle == "Livrée");
-            ModifEtatSuiviCommandeDocumentLivre(commandeDocument.Id, nouveauSuivi);
+            if (ModifEtatSuiviCommandeDocumentLivre(commandeDocument.Id, nouveauSuivi))
+            {
+                MessageBox.Show("Les exemplaires ont été ajoutés dans la base de données.", "Information");
+            }
         }
 
         /// <summary>
@@ -504,19 +507,23 @@ namespace Mediatek86.vue
         /// </summary>
         /// <param name="idCommandeDocument"></param>
         /// <param name="nouveauSuivi"></param>
-        private void ModifEtatSuiviCommandeDocumentLivre(string idCommandeDocument, Suivi nouveauSuivi)
+        /// <returns>True si modification a réussi</returns>
+        private bool ModifEtatSuiviCommandeDocumentLivre(string idCommandeDocument, Suivi nouveauSuivi)
         {
             if (ValidationModifEtatSuivi(nouveauSuivi.Libelle))
             {
                 if (controle.ModifSuiviCommandeDocument(idCommandeDocument, nouveauSuivi.Id))
                 {
                     AfficheCommandeDocumentLivre();
+                    return true;
                 }
                 else
                 {
                     MessageBox.Show("Une erreur s'est produite.", "Erreur");
+                    return false;
                 }
             }
+            return false;
         }
     }
 }
