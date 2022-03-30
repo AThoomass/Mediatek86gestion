@@ -66,8 +66,10 @@ namespace Mediatek86.vue
                 Dvd dvd = lesDvd.Find(x => x.Id.Equals(txbDvdNumRecherche.Text));
                 if (dvd != null)
                 {
-                    List<Dvd> Dvd = new List<Dvd>();
-                    Dvd.Add(dvd);
+                    List<Dvd> Dvd = new List<Dvd>
+                    {
+                        dvd
+                    };
                     RemplirDvdListe(Dvd);
                 }
                 else

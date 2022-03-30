@@ -385,8 +385,7 @@ namespace Mediatek86.vue
             string idRevue = txbAbonnementRevueNumeroRevue.Text.Trim();
 
             String montantSaisie = txbAbonnementRevueMontant.Text.Replace(',', '.');
-            Double montant;
-            bool success = Double.TryParse(montantSaisie, out montant);
+            bool success = Double.TryParse(montantSaisie, out double montant);
             if (!success)
             {
                 MessageBox.Show("La valeur saisie pour le montant doit être numérique.", "Erreur");

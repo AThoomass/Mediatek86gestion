@@ -4,11 +4,14 @@ using Mediatek86.metier;
 using Mediatek86.vue;
 using System;
 using System.Linq;
+using System.Windows.Forms;
+using System.Text;
+using System.Security.Cryptography;
 
 
 namespace Mediatek86.controleur
 {
-    internal class Controle
+    public class Controle
     {
         private readonly List<Livre> lesLivres;
         private readonly List<Dvd> lesDvd;
@@ -19,7 +22,13 @@ namespace Mediatek86.controleur
         private readonly List<Suivi> lesSuivis;
 
         /// <summary>
-        /// Ouverture de la fenêtre
+        /// Le service dont dépent l'utilisateur connecté
+        /// </summary>
+        public Service LeService { get; private set; }
+
+        /// <summary>
+        /// Ouverture de la fenêtre d'authentification
+        /// Si l'authentification réussi alors overture de l'application
         /// </summary>
         public Controle()
         {
@@ -30,8 +39,13 @@ namespace Mediatek86.controleur
             lesRayons = Dao.GetAllRayons();
             lesPublics = Dao.GetAllPublics();
             lesSuivis = Dao.GetAllSuivis();
-            FrmMediatek frmMediatek = new FrmMediatek(this);
-            frmMediatek.ShowDialog();
+            FrmAuthentification frmAuthentification = new FrmAuthentification(this);
+            Application.Run(frmAuthentification);
+            if (frmAuthentification.AuthentificationSuccess)
+            {
+                FrmMediatek frmMediatek = new FrmMediatek(this);
+                Application.Run(frmMediatek);
+            }
         }
 
         /// <summary>
@@ -108,28 +122,29 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// récupère les abonnements d'une revue
+        /// Récupère les abonnements d'une revue depuis la bdd
         /// </summary>
-        /// <param name="idDocument"></param>
-        /// <returns></returns>
+        /// <param name="idDocument">Identifiant de la revue concerné</param>
+        /// <returns>Collection d'objets de type Abonnement</returns>
         public List<Abonnement> GetAbonnement(string idDocument)
         {
             return Dao.GetAbonnement(idDocument);
         }
 
         /// <summary>
-        /// récupère les fin d'abonnements d'une revue
+        /// Récupère les abonnements avec une date d'expiration
+        /// à moins de 30 jours deplus la bdd
         /// </summary>
-        /// <param name="idDocument"></param>
-        /// <returns></returns>
+        /// <returns>Collection d'objets de type Abonnement</returns>
         public List<FinAbonnement> GetFinAbonnement()
         {
             return Dao.GetFinAbonnement();
         }
 
         /// <summary>
-        /// récupère les exemplaires d'une revue
+        /// Récupère les exemplaires d'une revue
         /// </summary>
+        /// <param name="idDocuement">Identifiant de la revue concerné</param>
         /// <returns>Collection d'objets Exemplaire</returns>
         public List<Exemplaire> GetExemplairesRevue(string idDocuement)
         {
@@ -191,7 +206,7 @@ namespace Mediatek86.controleur
         /// Récupère les exemplaires rattachés à la revue concerné par un abonnement
         /// puis demande vérification s'ils font partie de l'abonnement
         /// </summary>
-        /// <param name="abonnement"></param>
+        /// <param name="abonnement">Abonnement concerné</param>
         /// <returns>True si un exemplaire est rattaché à l'abonnement</returns>
         public bool VerifSuppressionAbonnement(Abonnement abonnement)
         {
@@ -207,9 +222,9 @@ namespace Mediatek86.controleur
         /// <summary>
         /// Vérifie si la dateParution est comprise entre dateCommande et dateFinAbonnement
         /// </summary>
-        /// <param name="dateCommande"></param>
-        /// <param name="dateFinAbonnement"></param>
-        /// <param name="dateParution"></param>
+        /// <param name="dateCommande">Date de commande d'un abonnement</param>
+        /// <param name="dateFinAbonnement">Date d'expiration d'un abonnement</param>
+        /// <param name="dateParution">Date de parution d'un abonnement</param>
         /// <returns>True si la date est comprise</returns>
         public bool ParutionDansAbonnement(DateTime dateCommande, DateTime dateFinAbonnement, DateTime dateParution)
         {
@@ -217,13 +232,50 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// 
+        /// Demande la suppression d'un abonnement de la bdd
         /// </summary>
-        /// <param name="idAbonnement"></param>
-        /// <returns></returns>
+        /// <param name="idAbonnement">Identifiant de l'abonnement concerné</param>
+        /// <returns>True si l'opréation réussi</returns>
         public bool SupprAbonnement(string idAbonnement)
         {
             return Dao.SupprAbonnement(idAbonnement);
+        }
+
+        /// <summary>
+        /// Calcul du hash MD5 d'une chaîne de caractères
+        /// </summary>
+        /// <param name="mdp">la chaîne d'entrée</param>
+        /// <returns>Le hash calculé</returns>
+        public string CreateMD5(string mdp)
+        {
+            // Utilisation du string mdp pour calculer MD5 hash
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] inputBytes = Encoding.ASCII.GetBytes(mdp);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Conversion du vecteur vers un string hexadecimal
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Récupère le service de l'utilisateur qui essaye de se connecter depuis la bdd
+        /// Valorise la propriété 'service'
+        /// </summary>
+        /// <param name="utilisateur">L'identifiant de l'utilisateur</param>
+        /// <param name="mdp">Le mot de passe de l'utilisateur</param>
+        /// <returns>Le service de l'utilisateur s'il est trouvé dans la bdd, et le mdp est correct. Sinon retourne null</returns>
+        public Service Authentification(string utilisateur, string mdp)
+        {
+            Service service = Dao.Authentification(utilisateur, CreateMD5(mdp));
+            LeService = service;
+            return service;
         }
 
     }

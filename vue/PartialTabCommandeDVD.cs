@@ -407,8 +407,7 @@ namespace Mediatek86.vue
             string libelleSuivi = lesSuivis[0].Libelle;
 
             String montantSaisie = txbCommandeDvdMontant.Text.Replace(',', '.');
-            Double montant;
-            bool success = Double.TryParse(montantSaisie, out montant);
+            bool success = Double.TryParse(montantSaisie, out double montant);
             if (!success)
             {
                 MessageBox.Show("La valeur saisie pour le montant doit être numérique.", "Erreur");

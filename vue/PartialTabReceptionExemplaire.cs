@@ -25,7 +25,7 @@ namespace Mediatek86.vue
         private void tabReceptionRevue_Enter(object sender, EventArgs e)
         {
             lesRevues = controle.GetAllRevues();
-            accesReceptionExemplaireGroupBox(false);
+            AccesReceptionExemplaireGroupBox(false);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Mediatek86.vue
         /// <param name="e"></param>
         private void txbReceptionRevueNumero_TextChanged(object sender, EventArgs e)
         {
-            accesReceptionExemplaireGroupBox(false);
+            AccesReceptionExemplaireGroupBox(false);
             VideReceptionRevueInfos();
         }
 
@@ -106,12 +106,12 @@ namespace Mediatek86.vue
                 pcbReceptionRevueImage.Image = null;
             }
             // affiche la liste des exemplaires de la revue
-            afficheReceptionExemplairesRevue();
+            AfficheReceptionExemplairesRevue();
             // accès à la zone d'ajout d'un exemplaire
-            accesReceptionExemplaireGroupBox(true);
+            AccesReceptionExemplaireGroupBox(true);
         }
 
-        private void afficheReceptionExemplairesRevue()
+        private void AfficheReceptionExemplairesRevue()
         {
             string idDocuement = txbReceptionRevueNumero.Text;
             lesExemplaires = controle.GetExemplairesRevue(idDocuement);
@@ -134,7 +134,7 @@ namespace Mediatek86.vue
             pcbReceptionRevueImage.Image = null;
             lesExemplaires = new List<Exemplaire>();
             RemplirReceptionExemplairesListe(lesExemplaires);
-            accesReceptionExemplaireGroupBox(false);
+            AccesReceptionExemplaireGroupBox(false);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Mediatek86.vue
         /// et vide les objets graphiques
         /// </summary>
         /// <param name="acces"></param>
-        private void accesReceptionExemplaireGroupBox(bool acces)
+        private void AccesReceptionExemplaireGroupBox(bool acces)
         {
             VideReceptionExemplaireInfos();
             grpReceptionExemplaire.Enabled = acces;
@@ -167,9 +167,11 @@ namespace Mediatek86.vue
         private void btnReceptionExemplaireImage_Click(object sender, EventArgs e)
         {
             string filePath = "";
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Filter = "Files|*.jpg;*.bmp;*.jpeg;*.png;*.gif";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = DOSSIERINITIALRECHERCHEIMAGE,
+                Filter = "Files|*.jpg;*.bmp;*.jpeg;*.png;*.gif"
+            };
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog.FileName;
@@ -205,7 +207,7 @@ namespace Mediatek86.vue
                     if (controle.CreerExemplaire(exemplaire))
                     {
                         VideReceptionExemplaireInfos();
-                        afficheReceptionExemplairesRevue();
+                        AfficheReceptionExemplairesRevue();
                     }
                     else
                     {

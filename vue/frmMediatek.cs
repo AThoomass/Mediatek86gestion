@@ -15,6 +15,7 @@ namespace Mediatek86.vue
 
         private readonly Controle controle;
         const string ETATNEUF = "00001";
+        const string DOSSIERINITIALRECHERCHEIMAGE = "c:\\";
 
         private readonly BindingSource bdgLivresListe = new BindingSource();
         private readonly BindingSource bdgDvdListe = new BindingSource();
@@ -41,6 +42,13 @@ namespace Mediatek86.vue
         {
             InitializeComponent();
             this.controle = controle;
+            if (controle.LeService.Libelle == "prêt")
+            {
+                tabOngletsApplication.TabPages.Remove(tabCommandeLivre);
+                tabOngletsApplication.TabPages.Remove(tabCommandeDVD);
+                tabOngletsApplication.TabPages.Remove(tabAbonnementRevue);
+                grpReceptionExemplaire.Visible = false;
+            }
         }
 
         /// <summary>
@@ -50,11 +58,14 @@ namespace Mediatek86.vue
         /// <param name="e"></param>
         private void FrmMediatek_Shown(object sender, EventArgs e)
         {
-            FrmAlerteFinAbonnement alerteFinAbonnements = new FrmAlerteFinAbonnement(controle)
+            if (controle.LeService.Libelle != "prêt")
             {
-                StartPosition = FormStartPosition.CenterParent
-            };
-            alerteFinAbonnements.ShowDialog();
+                FrmAlerteFinAbonnement alerteFinAbonnements = new FrmAlerteFinAbonnement(controle)
+                {
+                    StartPosition = FormStartPosition.CenterParent
+                };
+                alerteFinAbonnements.ShowDialog();
+            }
         }
 
         #region modules communs

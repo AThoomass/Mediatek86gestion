@@ -66,8 +66,10 @@ namespace Mediatek86.vue
                 Revue revue = lesRevues.Find(x => x.Id.Equals(txbRevuesNumRecherche.Text));
                 if (revue != null)
                 {
-                    List<Revue> revues = new List<Revue>();
-                    revues.Add(revue);
+                    List<Revue> revues = new List<Revue>
+                    {
+                        revue
+                    };
                     RemplirRevuesListe(revues);
                 }
                 else
