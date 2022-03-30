@@ -85,16 +85,6 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// Affichage d'un MessageBox pour demander validation de suppression d'un document
-        /// </summary>
-        /// <param name="titre">Le titre du document concerné</param>
-        /// <returns>True si suppression confirmée, sinon false</returns>
-        private bool ValidationSuppression(string titre)
-        {
-            return (MessageBox.Show("Etes-vous sûr de vouloir supprimer '" + titre + "' ?", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes);
-        }
-
-        /// <summary>
         /// Affichage d'un MessageBox pour demander validation de changement d'état de suivi
         /// </summary>
         /// <param name="libelleSuivi">Le nouvel état de suivi</param>
