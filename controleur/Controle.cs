@@ -8,17 +8,49 @@ using System.Windows.Forms;
 using System.Text;
 using System.Security.Cryptography;
 
-
+/// <summary>
+/// Contrôleur de l'application
+/// </summary>
 namespace Mediatek86.controleur
 {
+    /// <summary>
+    /// Contrôleur de l'application
+    /// </summary>
     public class Controle
     {
+        /// <summary>
+        /// Collection d'objets Livre
+        /// </summary>
         private readonly List<Livre> lesLivres;
+
+        /// <summary>
+        /// Collection d'objets Dvd
+        /// </summary>
         private readonly List<Dvd> lesDvd;
+
+        /// <summary>
+        /// Collection d'objets Revue
+        /// </summary>
         private readonly List<Revue> lesRevues;
+
+        /// <summary>
+        /// Collection d'objets Rayon dont la classe mère est Categorie
+        /// </summary>
         private readonly List<Categorie> lesRayons;
+
+        /// <summary>
+        /// Collection d'objets Public dont la classe mère est Categorie
+        /// </summary>
         private readonly List<Categorie> lesPublics;
+
+        /// <summary>
+        /// Collection d'objets Genre dont la classe mère est Categorie
+        /// </summary>
         private readonly List<Categorie> lesGenres;
+
+        /// <summary>
+        /// Collection d'objets Suivi
+        /// </summary>
         private readonly List<Suivi> lesSuivis;
 
         /// <summary>
@@ -49,7 +81,7 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// getter sur la liste des genres
+        /// Getter sur la liste des genres
         /// </summary>
         /// <returns>Collection d'objets Genre</returns>
         public List<Categorie> GetAllGenres()
@@ -58,7 +90,7 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// getter sur la liste des livres
+        /// Getter sur la liste des livres
         /// </summary>
         /// <returns>Collection d'objets Livre</returns>
         public List<Livre> GetAllLivres()
@@ -67,16 +99,16 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// getter sur la liste des Dvd
+        /// Getter sur la liste des Dvd
         /// </summary>
-        /// <returns>Collection d'objets dvd</returns>
+        /// <returns>Collection d'objets DVD</returns>
         public List<Dvd> GetAllDvd()
         {
             return lesDvd;
         }
 
         /// <summary>
-        /// getter sur la liste des revues
+        /// Getter sur la liste des revues
         /// </summary>
         /// <returns>Collection d'objets Revue</returns>
         public List<Revue> GetAllRevues()
@@ -85,7 +117,7 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// getter sur les rayons
+        /// Getter sur les rayons
         /// </summary>
         /// <returns>Collection d'objets Rayon</returns>
         public List<Categorie> GetAllRayons()
@@ -94,7 +126,7 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// getter sur les publics
+        /// Getter sur les publics
         /// </summary>
         /// <returns>Collection d'objets Public</returns>
         public List<Categorie> GetAllPublics()

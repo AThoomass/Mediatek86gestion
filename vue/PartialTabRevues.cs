@@ -1,16 +1,19 @@
 ﻿using Mediatek86.metier;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/// <summary>
+/// Les vues de l'application
+/// </summary>
 namespace Mediatek86.vue
 {
+    /// <summary>
+    /// Classe partielle représentant l'onglet Revues
+    /// </summary>
     public partial class FrmMediatek : Form
     {
         //-----------------------------------------------------------
@@ -35,6 +38,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Remplit le dategrid avec la liste reçue en paramètre
         /// </summary>
+        /// <param name="revues">La collection de revues</param>
         private void RemplirRevuesListe(List<Revue> revues)
         {
             bdgRevuesListe.DataSource = revues;
@@ -115,9 +119,9 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// Affichage des informations de la revue sélectionné
+        /// Affichage des informations de la revue sélectionnée
         /// </summary>
-        /// <param name="revue"></param>
+        /// <param name="revue">La revue sélectionnée</param>
         private void AfficheRevuesInfos(Revue revue)
         {
             txbRevuesPeriodicite.Text = revue.Periodicite;

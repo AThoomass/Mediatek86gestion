@@ -189,8 +189,9 @@
   <ItemGroup>
     <AdditionalFiles Include=".sonarlint\mediatek86\CSharp\SonarLint.xml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="scriptbdd\" />
+    <Content Include="scriptbdd\mediatek86 .sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

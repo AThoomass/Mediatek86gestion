@@ -1,13 +1,18 @@
-﻿using System;
+﻿using Mediatek86.metier;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Mediatek86.metier;
 using System.Drawing;
-using System.Linq;
 using System.Globalization;
 
+/// <summary>
+/// Les vues de l'application
+/// </summary>
 namespace Mediatek86.vue
 {
+    /// <summary>
+    /// Classe partielle représentant l'onglet de commande de livres
+    /// </summary>
     public partial class FrmMediatek : Form
     {
         //-----------------------------------------------------------
@@ -40,8 +45,9 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// Remplit le dategrid avec la liste reçue en paramètre
+        /// Remplit le dategrid avec la collection reçue en paramètre
         /// </summary>
+        /// <param name="lesCommandeDocument">La collection de CommandeDocument</param>
         private void RemplirCommandeLivresListe(List<CommandeDocument> lesCommandeDocument)
         {
 
@@ -137,7 +143,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Affichage des informations du livre sélectionné et les commandes
         /// </summary>
-        /// <param name="livre"></param>
+        /// <param name="livre">Le livre sélectionné</param>
         private void AfficheCommandeLivreInfos(Livre livre)
         {
             // informations sur le livre
@@ -168,7 +174,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Affichage des détails d'une commande
         /// </summary>
-        /// <param name="commandeDocument"></param>
+        /// <param name="commandeDocument">Le CommandeDocument concernée</param>
         private void AfficheCommandeLivresCommande(CommandeDocument commandeDocument)
         {
             txbCommandeLivreNumeroCommande.Text = commandeDocument.Id;
@@ -222,7 +228,7 @@ namespace Mediatek86.vue
         /// (Dés)active la zone de gestion de commandes
         /// et vide les objets graphiques
         /// </summary>
-        /// <param name="acces"></param>
+        /// <param name="acces">'True' autorise l'accès</param>
         private void AccesGestionCommandeLivresGroupBox(bool acces)
         {
             grpGestionCommandeLivre.Enabled = acces;
@@ -286,7 +292,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Activation des boutons de gestion de commande en fonction de l'état de suivi
         /// </summary>
-        /// <param name="commandeDocument"></param>
+        /// <param name="commandeDocument">La CommandeDocument concernée</param>
         private void ActivationModificationCommandeLivres(CommandeDocument commandeDocument)
         {
             string etatSuivi = commandeDocument.LibelleSuivi;
@@ -325,7 +331,6 @@ namespace Mediatek86.vue
         /// <summary>
         /// Début de saisie de commande de livre 
         /// </summary>
-        /// <param name="actif"></param>
         private void DebutSaisieCommandeLivres()
         {
             AccesSaisieCommandeLivre(true);
@@ -347,7 +352,7 @@ namespace Mediatek86.vue
         /// (Dés)active la protection readonly des champs de détails de commande
         /// (Dés)active les boutons concernant l'ajout, validation et annulation de saisie de commande
         /// </summary>
-        /// <param name="acces"></param>
+        /// <param name="acces">'True' active les boutons 'Valider' et 'Annuler', désactive le bouton 'Ajouter', déverrouille les champs des détails de commande</param>
         private void AccesSaisieCommandeLivre(bool acces)
         {
             saisieCommandeLivre = acces;
@@ -504,8 +509,8 @@ namespace Mediatek86.vue
         /// <summary>
         /// Demande de modification de l'état de suivi au contrôleur après validation utilisateur
         /// </summary>
-        /// <param name="idCommandeDocument"></param>
-        /// <param name="nouveauSuivi"></param>
+        /// <param name="idCommandeDocument">Identifiant du document concerné</param>
+        /// <param name="nouveauSuivi">Nouvel état de suivi</param>
         /// <returns>True si modification a réussi</returns>
         private bool ModifEtatSuiviCommandeDocumentLivre(string idCommandeDocument, Suivi nouveauSuivi)
         {

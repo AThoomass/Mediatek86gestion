@@ -1,17 +1,18 @@
 ﻿using Mediatek86.metier;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 
+/// <summary>
+/// Les vues de l'application
+/// </summary>
 namespace Mediatek86.vue
 {
+    /// <summary>
+    /// Classe partielle représentant l'onglet de commande de DVD
+    /// </summary>
     public partial class FrmMediatek : Form
     {
         //-----------------------------------------------------------
@@ -133,9 +134,9 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// Affichage des informations de la revue sélectionnée et les exemplaires
+        /// Affichage des informations du DVD sélectionné et les exemplaires
         /// </summary>
-        /// <param name="revue"></param>
+        /// <param name="dvd">Le DVD sélectionné</param>
         private void AfficheCommandeDvdInfos(Dvd dvd)
         {
             // informations sur le DVD
@@ -167,7 +168,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Affichage des détails d'une commande de DVD
         /// </summary>
-        /// <param name="commandeDocument"></param>
+        /// <param name="commandeDocument">La CommandeDocument concernée</param>
         private void AfficheCommandeDvdCommande(CommandeDocument commandeDocument)
         {
             txbCommandeDvdNumeroCommande.Text = commandeDocument.Id;
@@ -218,10 +219,9 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// (Dés)active la zone de gestion de commandes
-        /// et vide les objets graphiques
+        /// (Dés)active la zone de gestion de commandes et le bouton 'Ajouter'
         /// </summary>
-        /// <param name="acces"></param>
+        /// <param name="acces">'True' autorise l'accès</param>
         private void AccesGestionCommandeDvdGroupBox(bool acces)
         {
             grpGestionCommandeDvd.Enabled = acces;
@@ -284,7 +284,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Activation des boutons de gestion de commande en fonction de l'état de suivi
         /// </summary>
-        /// <param name="commandeDocument"></param>
+        /// <param name="commandeDocument">La CommandeDocument concernée</param>
         private void ActivationModificationCommandeDvd(CommandeDocument commandeDocument)
         {
             string etatSuivi = commandeDocument.LibelleSuivi;
@@ -323,7 +323,6 @@ namespace Mediatek86.vue
         /// <summary>
         /// Début de saisie de commande de DVD. 
         /// </summary>
-        /// <param name="actif"></param>
         private void DebutSaisieCommandeDvd()
         {
             AccesSaisieCommandeDvd(true);
@@ -345,7 +344,7 @@ namespace Mediatek86.vue
         /// (Dés)active la protection readonly des champs de détails de commande
         /// (Dés)active les boutons concernant l'ajout, validation et annulation de saisie de commande
         /// </summary>
-        /// <param name="accces"></param>
+        /// <param name="accces">'True' active les boutons 'Valider' et 'Annuler', désactive le bouton 'Ajouter', déverrouille les champs des détails de commande</param>
         private void AccesSaisieCommandeDvd(bool accces)
         {
             saisieCommandeDvd = accces;
@@ -502,8 +501,8 @@ namespace Mediatek86.vue
         /// <summary>
         /// Demande de modification de l'état de suivi au contrôleur après validation utilisateur
         /// </summary>
-        /// <param name="idCommandeDocument"></param>
-        /// <param name="nouveauSuivi"></param>
+        /// <param name="idCommandeDocument">Identifiant du document concerné</param>
+        /// <param name="nouveauSuivi">Nouvel état de suivi</param>
         /// <returns>True si modification a réussi</returns>
         private bool ModifEtatSuiviCommandeDocumentDvd(string idCommandeDocument, Suivi nouveauSuivi)
         {

@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
+/// <summary>
+/// Connexion à et interactions avec la base de données
+/// </summary>
 namespace Mediatek86.bdd
 {
+    /// <summary>
+    /// Classe qui gère la connexion avec la base de données
+    /// </summary>
     public class BddMySql
     {
         /// <summary>
@@ -25,7 +31,7 @@ namespace Mediatek86.bdd
         /// <summary>
         /// Constructeur privé pour créer la connexion à la BDD et l'ouvrir
         /// </summary>
-        /// <param name="stringConnect">chaine de connexion</param>
+        /// <param name="stringConnect">Chaine de connexion</param>
         private BddMySql(string stringConnect)
         {
             try
@@ -42,8 +48,8 @@ namespace Mediatek86.bdd
         /// <summary>
         /// Crée une instance unique de la classe
         /// </summary>
-        /// <param name="stringConnect">chaine de connexion</param>
-        /// <returns>instance unique de la classe</returns>
+        /// <param name="stringConnect">Chaine de connexion</param>
+        /// <returns>Instance unique de la classe</returns>
         public static BddMySql GetInstance(string stringConnect)
         {
             if (instance is null)
@@ -56,7 +62,7 @@ namespace Mediatek86.bdd
         /// <summary>
         /// Exécute une requête type "select" et valorise le curseur
         /// </summary>
-        /// <param name="stringQuery">requête select</param>
+        /// <param name="stringQuery">Requête select</param>
         public void ReqSelect(string stringQuery, Dictionary<string, object> parameters)
         {
             MySqlCommand command;
@@ -87,7 +93,7 @@ namespace Mediatek86.bdd
         /// <summary>
         /// Tente de lire la ligne suivante du curseur
         /// </summary>
-        /// <returns>false si fin de curseur atteinte</returns>
+        /// <returns>False si fin de curseur atteinte</returns>
         public bool Read()
         {
             if (reader is null)
@@ -107,8 +113,8 @@ namespace Mediatek86.bdd
         /// <summary>
         /// Retourne le contenu d'un champ dont le nom est passé en paramètre
         /// </summary>
-        /// <param name="nameField">nom du champ</param>
-        /// <returns>valeur du champ</returns>
+        /// <param name="nameField">Nom du champ</param>
+        /// <returns>Valeur du champ</returns>
         public object Field(string nameField)
         {
             if (reader is null)
@@ -129,7 +135,7 @@ namespace Mediatek86.bdd
         /// Exécution de plusieurs requêtes autre que "select" dans une seul transaction
         /// </summary>
         /// <param name="queries">Liste de requêtes à faire</param>
-        /// <param name="parameters">dictionnire contenant les parametres</param>
+        /// <param name="parameters">Dictionnire contenant les parametres</param>
         public void ReqUpdate(List<string> queries, Dictionary<string, object> parameters)
         {
             MySqlCommand command;
@@ -177,6 +183,7 @@ namespace Mediatek86.bdd
         /// <summary>
         /// Pas d'accès à la BDD : arrêt de l'application
         /// </summary>
+        /// <param name="e"></param>
         private void ErreurGraveBddNonAccessible(Exception e)
         {
             MessageBox.Show("Base de données non accessibles", "Erreur grave");

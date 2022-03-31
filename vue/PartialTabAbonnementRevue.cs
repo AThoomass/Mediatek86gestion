@@ -1,17 +1,21 @@
 ﻿using Mediatek86.metier;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 
+
+/// <summary>
+/// Les vues de l'application
+/// </summary>
 namespace Mediatek86.vue
 {
+    /// <summary>
+    /// Classe partielle représentant l'onglet d'abonnements aux revues
+    /// </summary>
     public partial class FrmMediatek : Form
     {
 
@@ -44,8 +48,9 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// Remplit le dategrid avec la liste reçue en paramètre
+        /// Remplit le dategrid avec la collection reçue en paramètre
         /// </summary>
+        /// <param name="lesAbonnements">La collection d'abonnements</param>
         private void RemplirAbonnementRevueListe(List<Abonnement> lesAbonnements)
         {
 
@@ -136,7 +141,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Affichage des informations de la revue sélectionnée et les exemplaires
         /// </summary>
-        /// <param name="revue"></param>
+        /// <param name="revue">La revue sélectionnée</param>
         private void AfficheAbonnementRevueInfos(Revue revue)
         {
             // informations sur l'abonnement
@@ -167,7 +172,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Affichage des détails d'un abonnement
         /// </summary>
-        /// <param name="commandeDocument"></param>
+        /// <param name="abonnement">L'abonnement concerné</param>
         private void AfficheAbonnementRevueAbonnement(Abonnement abonnement)
         {
             txbAbonnementRevueNumeroAbonnement.Text = abonnement.Id;
@@ -221,7 +226,7 @@ namespace Mediatek86.vue
         /// (Dés)active la zone de gestion de commandes
         /// et vide les objets graphiques 
         /// </summary>
-        /// <param name="acces"></param>
+        /// <param name="acces">'True' autorise l'accès</param>
         private void AccesGestionAbonnementRevueGroupBox(bool acces)
         {
             grpGestionAbonnementRevue.Enabled = acces;
@@ -256,7 +261,8 @@ namespace Mediatek86.vue
         /// <summary>
         /// Evénement sélection d'une ligne dans la liste des abonnements 
         /// Vérifie si une saisie est en cours avant de procéder
-        /// Demande validation d'abandon si une saisie est en cours        /// </summary>
+        /// Demande validation d'abandon si une saisie est en cours        
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void dgvAbonnementRevueListe_SelectionChanged(object sender, EventArgs e)
@@ -317,7 +323,7 @@ namespace Mediatek86.vue
         /// (Dés)active la protection readonly des champs de détails d'abonnement
         /// (Dés)active les boutons concernant l'ajout, validation et annulation de saisie d'abonnement
         /// </summary>
-        /// <param name="acces"></param>
+        /// <param name="acces">'True' active les boutons 'Valider' et 'Annuler', désactive le bouton 'Ajouter', déverrouille les champs des détails de commande</param>
         private void AccesSaisieAbonnement(bool acces)
         {
             saisieAbonnementRevue = acces;

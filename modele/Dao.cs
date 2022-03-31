@@ -1,18 +1,42 @@
 ﻿using Mediatek86.metier;
-using System.Collections.Generic;
 using Mediatek86.bdd;
+using System.Collections.Generic;
 using System;
-using System.Windows.Forms;
 
+/// <summary>
+/// Modèle : classe Dao (Data Access Object) pour envoyer requêtes à la base de données et récupérer les réponses
+/// </summary>
 namespace Mediatek86.modele
 {
+    /// <summary>
+    /// Classe Data Access Object.
+    /// Gère les requêtes et réponses vers et depuis la base de données
+    /// </summary>
     public static class Dao
     {
-
+        /// <summary>
+        /// Adresse du serveur
+        /// </summary>
         private static readonly string server = "localhost";
+
+        /// <summary>
+        /// Identifiant utilisateur pour la base de données
+        /// </summary>
         private static readonly string userid = "root";
+
+        /// <summary>
+        /// Mot de passe pour la base de données
+        /// </summary>
         private static readonly string password = "";
+
+        /// <summary>
+        /// Nom de la base de données
+        /// </summary>
         private static readonly string database = "mediatek86";
+
+        /// <summary>
+        /// Chaine de connexion pour la base de données
+        /// </summary>
         private static readonly string connectionString = "server="+server+";user id="+userid+";password="+password+";database="+database+";SslMode=none";
 
         /// <summary>
@@ -250,9 +274,9 @@ namespace Mediatek86.modele
         }
 
         /// <summary>
-        /// Retourne les exemplaires d'une revue
+        /// Retourne les exemplaires d'une revue à partir de la BDD
         /// </summary>
-        /// <param name="idDoct"></param>
+        /// <param name="idDoc">Identifiant de la revue</param>
         /// <returns>Liste d'objets Exemplaire</returns>
         public static List<Exemplaire> GetExemplairesRevue(string idDoc)
         {
@@ -383,10 +407,10 @@ namespace Mediatek86.modele
         }
 
         /// <summary>
-        /// ecriture d'un exemplaire en base de données
+        /// Insertion d'un exemplaire en base de données
         /// </summary>
-        /// <param name="exemplaire"></param>
-        /// <returns>true si l'insertion a pu se faire</returns>
+        /// <param name="exemplaire">Exemplaire à ajouter</param>
+        /// <returns>True si l'insertion a pu se faire</returns>
         public static bool CreerExemplaire(Exemplaire exemplaire)
         {
             try

@@ -3,17 +3,30 @@ using System.Windows.Forms;
 using Mediatek86.controleur;
 using Mediatek86.metier;
 
+/// <summary>
+/// Les vues de l'application
+/// </summary>
 namespace Mediatek86.vue
 {
+    /// <summary>
+    /// Vue pour l'authentification de l'utilisateur
+    /// </summary>
     public partial class FrmAuthentification : Form
     {
+        /// <summary>
+        /// Instance du contrôleur
+        /// </summary>
         private readonly Controle controle;
 
         /// <summary>
-        /// True si l'authentification réussi
+        /// Booléen, true si l'authentification a réussi
         /// </summary>
         public bool AuthentificationSuccess { get; private set; }
 
+        /// <summary>
+        /// Constructeur, initialise le composant et valorise la propriété contrôleur avec le contrôleur reçu en paramètre
+        /// </summary>
+        /// <param name="controle">Instance du contrôleur</param>
         public FrmAuthentification(Controle controle)
         {
             InitializeComponent();
@@ -21,7 +34,8 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// 
+        /// Clic sur le bouton valider vérifie si l'utilisateur et mdp sont correctes avant d'actionner le booléen authentification succes et de fermer la fenêtre
+        /// L'accès à l'application n'est pas authorisé pour le service 'Culture'
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -51,7 +65,7 @@ namespace Mediatek86.vue
         }
 
         /// <summary>
-        /// Fermer l'application
+        /// Clic sur le bouton annuler ferme l'application
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

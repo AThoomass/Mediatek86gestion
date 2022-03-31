@@ -1,16 +1,19 @@
 ﻿using Mediatek86.metier;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/// <summary>
+/// Les vues de l'application
+/// </summary>
 namespace Mediatek86.vue
 {
+    /// <summary>
+    /// Classe partielle représentant l'onglet Livres
+    /// </summary>
     public partial class FrmMediatek : Form
     {
 
@@ -36,6 +39,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Remplit le dategrid avec la liste reçue en paramètre
         /// </summary>
+        /// <param name="livres">Collection des livres</param>
         private void RemplirLivresListe(List<Livre> livres)
         {
             bdgLivresListe.DataSource = livres;
@@ -118,7 +122,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Affichage des informations du livre sélectionné
         /// </summary>
-        /// <param name="livre"></param>
+        /// <param name="livre">Le livre sélectionné</param>
         private void AfficheLivresInfos(Livre livre)
         {
             txbLivresAuteur.Text = livre.Auteur;

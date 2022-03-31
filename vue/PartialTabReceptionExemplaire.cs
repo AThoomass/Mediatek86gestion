@@ -1,16 +1,19 @@
 ﻿using Mediatek86.metier;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/// <summary>
+/// Les vues de l'application
+/// </summary>
 namespace Mediatek86.vue
 {
+    /// <summary>
+    /// Classe partielle représentant l'onglet de réception d'exemplaires de revues
+    /// </summary>
     public partial class FrmMediatek : Form
     {
         //-----------------------------------------------------------
@@ -31,6 +34,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Remplit le dategrid avec la liste reçue en paramètre
         /// </summary>
+        /// <param name="exemplaires">La collection d'exemplaires</param>
         private void RemplirReceptionExemplairesListe(List<Exemplaire> exemplaires)
         {
             bdgExemplairesListe.DataSource = exemplaires;
@@ -83,7 +87,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Affichage des informations de la revue sélectionnée et les exemplaires
         /// </summary>
-        /// <param name="revue"></param>
+        /// <param name="revue">La revue sélectionnée</param>
         private void AfficheReceptionRevueInfos(Revue revue)
         {
             // informations sur la revue
@@ -111,6 +115,9 @@ namespace Mediatek86.vue
             AccesReceptionExemplaireGroupBox(true);
         }
 
+        /// <summary>
+        /// Réceptionne et affiche les exemplaires d'une revue
+        /// </summary>
         private void AfficheReceptionExemplairesRevue()
         {
             string idDocuement = txbReceptionRevueNumero.Text;
@@ -152,7 +159,7 @@ namespace Mediatek86.vue
         /// Permet ou interdit l'accès à la gestion de la réception d'un exemplaire
         /// et vide les objets graphiques
         /// </summary>
-        /// <param name="acces"></param>
+        /// <param name="acces">'True' permet l'accès</param>
         private void AccesReceptionExemplaireGroupBox(bool acces)
         {
             VideReceptionExemplaireInfos();
