@@ -127,7 +127,7 @@ namespace Mediatek86.vue
         /// - GroupBoxe permettant de saisir la réception d'exemplaires
         /// </summary>
         /// <param name="controle">Le contrôleur</param>
-        internal FrmMediatek(Controle controle)
+        public FrmMediatek(Controle controle)
         {
             InitializeComponent();
             this.controle = controle;
