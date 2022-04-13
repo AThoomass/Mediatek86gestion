@@ -3269,6 +3269,7 @@ namespace Mediatek86.vue
             this.ClientSize = new System.Drawing.Size(883, 659);
             this.Controls.Add(this.tabOngletsApplication);
             this.Name = "FrmMediatek";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gestion Médiathèque";
             this.Shown += new System.EventHandler(this.FrmMediatek_Shown);
             this.tabOngletsApplication.ResumeLayout(false);

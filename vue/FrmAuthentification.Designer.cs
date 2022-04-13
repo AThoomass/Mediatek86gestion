@@ -102,6 +102,7 @@
             this.Controls.Add(this.txbAuthMdp);
             this.Controls.Add(this.txbAuthUtilisateur);
             this.Name = "FrmAuthentification";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmAuthentification";
             this.ResumeLayout(false);
             this.PerformLayout();

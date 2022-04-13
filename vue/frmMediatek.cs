@@ -31,7 +31,7 @@ namespace Mediatek86.vue
         /// <summary>
         /// Chemin initial lors de la recherche d'un image sur son disque dur
         /// </summary>
-        const string DOSSIERINITIALRECHERCHEIMAGE = "c:\\";
+        const string DOSSIERINITIALRECHERCHEIMAGE = "c:\\MediatekImages";
 
         /// <summary>
         /// BindingSource pour le DataGridView des livres
