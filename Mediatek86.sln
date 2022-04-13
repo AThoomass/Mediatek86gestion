@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mediatek86", "Mediatek86.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mediatek86UnitTest", "Mediatek86UnitTest\Mediatek86UnitTest.csproj", "{4853562F-0EFA-415F-9420-BC0E86CF7EC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecFlowMediatek86", "SpecFlowMediatek86\SpecFlowMediatek86.csproj", "{DBA24593-8822-4179-8F48-E60C844147D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecFlowMediatek86", "SpecFlowMediatek86\SpecFlowMediatek86.csproj", "{DBA24593-8822-4179-8F48-E60C844147D2}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Mediatek86 Installer", "Mediatek86 Installer\Mediatek86 Installer.vdproj", "{F73A1586-5B51-4590-A4D5-D86D187783C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{DBA24593-8822-4179-8F48-E60C844147D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBA24593-8822-4179-8F48-E60C844147D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBA24593-8822-4179-8F48-E60C844147D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73A1586-5B51-4590-A4D5-D86D187783C4}.Debug|Any CPU.ActiveCfg = Debug
+		{F73A1586-5B51-4590-A4D5-D86D187783C4}.Debug|Any CPU.Build.0 = Debug
+		{F73A1586-5B51-4590-A4D5-D86D187783C4}.Release|Any CPU.ActiveCfg = Release
+		{F73A1586-5B51-4590-A4D5-D86D187783C4}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

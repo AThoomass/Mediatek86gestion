@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: mediatek86
 --
-CREATE DATABASE IF NOT EXISTS mediatek86 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE mediatek86;
 
 DELIMITER $$
 --

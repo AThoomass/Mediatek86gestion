@@ -17,17 +17,17 @@ namespace Mediatek86.modele
         /// <summary>
         /// Adresse du serveur
         /// </summary>
-        private static readonly string server = "localhost";
+        private static readonly string server = "atmediatek86.mysql.database.azure.com";
 
         /// <summary>
         /// Identifiant utilisateur pour la base de données
         /// </summary>
-        private static readonly string userid = "root";
+        private static readonly string userid = "mediaadmin";
 
         /// <summary>
         /// Mot de passe pour la base de données
         /// </summary>
-        private static readonly string password = "";
+        private static readonly string password = "TAGestion86";
 
         /// <summary>
         /// Nom de la base de données
@@ -37,7 +37,7 @@ namespace Mediatek86.modele
         /// <summary>
         /// Chaine de connexion pour la base de données
         /// </summary>
-        private static readonly string connectionString = "server="+server+";user id="+userid+";password="+password+";database="+database+";SslMode=none";
+        private static readonly string connectionString = "Server=" + server + ";User id=" + userid + ";Password=" + password + ";Database=" + database + ";SslMode=None";
 
         /// <summary>
         /// Retourne le service d'un utilisateur
